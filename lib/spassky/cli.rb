@@ -1,7 +1,9 @@
+require 'spassky/test_runner'
+
 module Spassky
   class Cli
     def self.run(argv)
-      puts "1 test passed"
+      TestRunner.new.run_test(argv[0])
     end
   end
 end

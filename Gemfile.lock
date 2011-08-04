@@ -36,6 +36,8 @@ GEM
     rack-test (0.6.0)
       rack (>= 1.0)
     rdiscount (1.6.8)
+    rest-client (1.6.1)
+      mime-types (>= 1.16)
     rspec (2.6.0)
       rspec-core (~> 2.6.0)
       rspec-expectations (~> 2.6.0)
@@ -61,4 +63,5 @@ DEPENDENCIES
   aruba
   capybara
   cucumber
+  rest-client
   rspec
