@@ -6,10 +6,10 @@ module Spassky
   describe Pusher do
     before do
       @response = mock("response", :code => 302, :headers => { "location" => "http://poll/me" })
-      @url = "http://foo/test_run"
+      @server_url = "http://foo/"
       @sleeper = mock("sleeper")
       @sleeper.stub!(:sleep)
-      @pusher = Pusher.new(@url, @sleeper)
+      @pusher = Pusher.new(@server_url, @sleeper)
       RestClient.stub!(:post).with("http://foo/test_run", "test contents"
         ).and_yield(@response, nil, nil)
       RestClient.stub!(:get)
@@ -20,6 +20,16 @@ module Spassky
         ).and_yield(@response, nil, nil)
       @pusher.push("test contents") do |result|
       end
+    end
+    
+    it "fails nicely when the url does not redirect" do
+      @response = mock("response", :code => 200, :headers => { })
+      RestClient.stub!(:post).with("http://foo/test_run", "test contents"
+        ).and_yield(@response, nil, nil)
+      lambda {
+        @pusher.push("test contents") do |result|
+        end
+      }.should raise_error("Expected http://foo/test_run to respond with 302")
     end
         
     it "polls the URL returned until the test passes" do
@@ -36,7 +46,7 @@ module Spassky
     it "yields the outcome of the test to the block" do
       RestClient.stub!(:get).and_return("pass")
       yielded_result = ""
-      Pusher.new(@url).push("test contents") do |result|
+      Pusher.new(@server_url).push("test contents") do |result|
         yielded_result = result
       end
       yielded_result.should == "pass"

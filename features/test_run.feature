@@ -1,10 +1,10 @@
+@javascript
 Feature: Test Run
   
   In order to inform design decisions
   As a mobile tester
   I want to collate test results from multiple devices
 
-  @javascript
   Scenario: Connect a device
     Given a connected mobile device
     Then it should wait for a test to run
@@ -21,7 +21,7 @@ Feature: Test Run
           </body>
         </html>
       """
-    When I run `spassky mytest.html`
+    When I run "spassky <host> mytest.html" with the server host 
     Then the output should contain:
       """
       1 test passed
