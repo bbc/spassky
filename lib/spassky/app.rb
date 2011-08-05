@@ -12,5 +12,13 @@ module Spassky
       url = "/device/idle/" + RandomStringGenerator.random_string
       "<html><head><meta http-equiv=\"refresh\" content=\"#{seconds}; url='#{url}'\"></head></html>"
     end
+    
+    post '/test_runs' do
+      redirect "/test_runs/#{RandomStringGenerator.random_string}"
+    end
+    
+    get '/test_runs/:id' do
+      "in progress"
+    end
   end
 end

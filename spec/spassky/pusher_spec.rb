@@ -5,18 +5,18 @@ require 'spassky/pusher'
 module Spassky
   describe Pusher do
     before do
-      @response = mock("response", :code => 302, :headers => { "location" => "http://poll/me" })
+      @response = mock("response", :code => 302, :headers => { :location => "http://poll/me" })
       @server_url = "http://foo/"
       @sleeper = mock("sleeper")
       @sleeper.stub!(:sleep)
       @pusher = Pusher.new(@server_url, @sleeper)
-      RestClient.stub!(:post).with("http://foo/test_run", "test contents"
+      RestClient.stub!(:post).with("http://foo/test_runs", "test contents"
         ).and_yield(@response, nil, nil)
       RestClient.stub!(:get)
     end
     
     it "pushes a test to the server" do
-      RestClient.should_receive(:post).with("http://foo/test_run", "test contents"
+      RestClient.should_receive(:post).with("http://foo/test_runs", "test contents"
         ).and_yield(@response, nil, nil)
       @pusher.push("test contents") do |result|
       end
@@ -24,12 +24,12 @@ module Spassky
     
     it "fails nicely when the url does not redirect" do
       @response = mock("response", :code => 200, :headers => { })
-      RestClient.stub!(:post).with("http://foo/test_run", "test contents"
+      RestClient.stub!(:post).with("http://foo/test_runs", "test contents"
         ).and_yield(@response, nil, nil)
       lambda {
         @pusher.push("test contents") do |result|
         end
-      }.should raise_error("Expected http://foo/test_run to respond with 302")
+      }.should raise_error("Expected http://foo/test_runs to respond with 302")
     end
         
     it "polls the URL returned until the test passes" do

@@ -7,17 +7,17 @@ module Spassky
       @sleeper = sleeper
     end
     
-    def test_run_url
-      test_run_url = @server_url.gsub(/\/$/, "") + "/test_run"
+    def test_runs_url
+      test_runs_url = @server_url.gsub(/\/$/, "") + "/test_runs"
     end
     
     def push(test_contents)
       location = nil
     
-      RestClient.post(test_run_url, test_contents) do |response, request, result|
-        location = response.headers["location"]
+      RestClient.post(test_runs_url, test_contents) do |response, request, result|
+        location = response.headers[:location]
       end
-      raise "Expected #{test_run_url} to respond with 302" unless location
+      raise "Expected #{test_runs_url} to respond with 302" unless location
       yield wait(location)
     end
     
