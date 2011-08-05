@@ -4,6 +4,11 @@ Feature: Test Run
   As a mobile tester
   I want to collate test results from multiple devices
 
+  @javascript
+  Scenario: Connect a device
+    Given a connected mobile device
+    Then it should wait for a test to run
+
   Scenario: Run test on a device
     Given a connected mobile device
     And a file named "mytest.html" with:

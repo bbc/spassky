@@ -1,5 +1,7 @@
 require 'capybara'
 require 'capybara/dsl'
+require 'capybara/cucumber'
+
 require 'aruba/cucumber'
 
 require File.join(File.dirname(__FILE__), '../../lib/spassky')
