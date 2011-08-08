@@ -17,6 +17,7 @@ Feature: Test Run
           <head>
           </head>
           <body>
+          <h1>My first Test!</h1>
           <script type="text/javascript">
           assert(true, 'the test should pass');
           </script>

@@ -30,6 +30,13 @@ module Spassky
       TestRun.find(params[:id]).status
     end
     
+    get '/test_runs/:id/run/assert' do
+      TestRun.find(params[:id]).save_results_for_user_agent(
+        :user_agent => request.user_agent,
+        :status => params[:status]
+      )
+    end
+    
     get '/test_runs/:id/run/:random' do
       seconds = 1
       test_run = TestRun.find(params[:id])

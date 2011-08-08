@@ -54,6 +54,16 @@ module Spassky
       end
     end
     
+    describe "GET /test_runs/:id/run/assert" do
+      it "saves the test result" do
+        test = mock(:test)
+        TestRun.stub!(:find).with('123').and_return(test)
+        header "User-Agent", "the user agent"
+        test.should_receive(:save_results_for_user_agent).with(:user_agent => "the user agent", :status => "pass")
+        get "/test_runs/123/run/assert?status=pass"
+      end
+    end
+    
     describe "GET /test_runs/:id/run/:random" do
       it "runs the test" do
         test = mock(:test, :contents => "test contents")
