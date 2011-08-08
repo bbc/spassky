@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'spassky/random_string_generator'
+require 'spassky/test_run'
 
 module Spassky
   class App < Sinatra::Base
@@ -14,11 +15,12 @@ module Spassky
     end
     
     post '/test_runs' do
+      TestRun.create({:name => params[:name], :contents => params[:contents]})
       redirect "/test_runs/#{RandomStringGenerator.random_string}"
     end
     
     get '/test_runs/:id' do
-      "in progress"
+      TestRun.find(params[:id]).status
     end
   end
 end

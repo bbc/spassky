@@ -10,6 +10,10 @@ module Spassky
   describe App do
     include Rack::Test::Methods
     
+    before do
+      RandomStringGenerator.stub!(:random_string).and_return("random-string")
+    end
+    
     def app
       App
     end
@@ -34,18 +38,30 @@ module Spassky
     end
     
     describe "POST /test_runs" do
+      before do
+        TestRun.stub!(:create).with(:name => "first-test", :contents => "test-contents")
+        RandomStringGenerator.stub!(:random_string).and_return("number")
+      end
+      
+      it "creates a test run" do
+        TestRun.should_receive(:create).with(:name => "first-test", :contents => "test-contents")
+        post "/test_runs", { :name => "first-test", :contents => "test-contents"}
+      end
+      
       it "redirects to the status page" do
-        RandomStringGenerator.should_receive(:random_string).and_return("number")
-        post "/test_runs"
+        post "/test_runs", { :name => "first-test", :contents => "test-contents"}
         last_response.should be_redirect
         last_response.location.should =~ /test_runs\/number$/
       end
     end
     
     describe "GET /test_runs/123" do
-      it "returns 'in progress'" do
+      it "returns the status of the test with the id '123'" do
+        test_run = mock
+        test_run.stub!(:status).and_return 'a status'
+        TestRun.should_receive(:find).with('123').and_return test_run
         get '/test_runs/123'
-        last_response.body.should == 'in progress'
+        last_response.body.should == 'a status'
       end
     end
     
