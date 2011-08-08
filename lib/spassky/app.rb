@@ -11,7 +11,12 @@ module Spassky
     get '/device/idle/:random' do
       seconds = 1
       url = "/device/idle/" + RandomStringGenerator.random_string
-      "<html><head><meta http-equiv=\"refresh\" content=\"#{seconds}; url='#{url}'\"></head></html>"
+      test_run = TestRun.find_next_to_run_for_user_agent(request.user_agent)
+      if test_run
+        test_run.contents
+      else
+        "<html><head><meta http-equiv=\"refresh\" content=\"#{seconds}; url='#{url}'\"></head></html>"
+      end
     end
     
     post '/test_runs' do

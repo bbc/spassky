@@ -28,12 +28,25 @@ module Spassky
     end
     
     describe "GET /device/idle/123" do
-      it "serves HTML page with a meta-refresh tag" do
-        RandomStringGenerator.should_receive(:random_string).and_return("next-iteration")
-        get "/device/idle/123"
-        seconds = 1
-        url = "/device/idle/next-iteration"
-        last_response.body.should include("<meta http-equiv=\"refresh\" content=\"#{seconds}; url='#{url}'\">")
+      describe "when there are no tests to run on the connected device" do
+        it "serves HTML page with a meta-refresh tag" do
+          TestRun.stub!(:find_next_to_run_for_user_agent)
+          RandomStringGenerator.should_receive(:random_string).and_return("next-iteration")
+          get "/device/idle/123"
+          seconds = 1
+          url = "/device/idle/next-iteration"
+          last_response.body.should include("<meta http-equiv=\"refresh\" content=\"#{seconds}; url='#{url}'\">")
+        end        
+      end
+      
+      describe "when there is a test to run on the connected device" do
+        it "runs the test" do
+          test = mock(:test, :contents => "test contents")
+          TestRun.stub!(:find_next_to_run_for_user_agent).with("some user agent").and_return(test)
+          header "User-Agent", "some user agent"
+          get "/device/idle/123"
+          last_response.body.should include("test contents")
+        end
       end
     end
     
