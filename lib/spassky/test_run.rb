@@ -3,8 +3,8 @@ module Spassky
     attr_accessor :name, :contents, :id
     
     def initialize(options)
-      name = options[:name]
-      contents = options[:contents]
+      @name = options[:name]
+      @contents = options[:contents]
       self.id = 123
       @status_by_user_agent = {}
     end

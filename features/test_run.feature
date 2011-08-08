@@ -14,6 +14,8 @@ Feature: Test Run
     And a file named "mytest.html" with:
       """
         <html>
+          <head>
+          </head>
           <body>
           <script type="text/javascript">
           assert(true, 'the test should pass');
