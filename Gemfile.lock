@@ -1,4 +1,5 @@
 GEM
+  remote: http://rubygems.org/
   specs:
     aruba (0.4.3)
       bcat (>= 0.6.1)
@@ -63,5 +64,6 @@ DEPENDENCIES
   aruba
   capybara
   cucumber
+  json
   rest-client
   rspec

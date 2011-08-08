@@ -6,6 +6,8 @@ module Spassky
   describe TestRunner do
     before do
       @test_pusher = mock(:test_pusher)
+      @test_result = mock(:test_result)
+      @test_result.stub!(:summary).and_return(:hello)
       File.stub!(:read).and_return('contents')
     end
     
@@ -21,14 +23,8 @@ module Spassky
     end
     
     it "prints a passed result when it arrives" do
-      Kernel.should_receive(:puts).with("1 test passed")
-      @test_pusher.should_receive(:push).and_yield "pass"
-      TestRunner.new(@test_pusher).run_test("foo_test")
-    end
-    
-    it "prints a failed result when it arrives" do
-      Kernel.should_receive(:puts).with("1 test failed")
-      @test_pusher.should_receive(:push).and_yield "fail"
+      Kernel.should_receive(:puts).with(:hello)
+      @test_pusher.should_receive(:push).and_yield(@test_result)
       TestRunner.new(@test_pusher).run_test("foo_test")
     end
   end

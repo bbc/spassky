@@ -1,4 +1,5 @@
 require 'rest-client'
+require 'spassky/test_result'
 
 module Spassky
   class Pusher
@@ -13,7 +14,6 @@ module Spassky
     
     def push(options)
       location = nil
-    
       RestClient.post(test_runs_url, options) do |response, request, result|
         location = response.headers[:location]
       end
@@ -22,10 +22,12 @@ module Spassky
     end
     
     def wait(location)
-      while (outcome = RestClient.get(location)) == 'in progress'
-        @sleeper.sleep 0.4
-      end
-      outcome
+      result = nil
+      begin
+        result = TestResult.from_json(RestClient.get(location))
+        @sleeper.sleep 0.4 if result.status == 'in progress'
+      end while result.status == 'in progress'
+      result
     end
   end
 end

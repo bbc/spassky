@@ -1,4 +1,7 @@
+source :rubygems
+
 gem 'rest-client'
+gem 'json'
 
 group :development do
   gem 'rspec'

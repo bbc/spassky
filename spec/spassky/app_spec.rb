@@ -3,6 +3,7 @@ require 'spec_helper'
 require 'capybara'
 require 'capybara/dsl'
 require 'rack/test'
+require 'json'
 
 require 'spassky/app'
 
@@ -113,11 +114,13 @@ module Spassky
     
     describe "GET /test_runs/123" do
       it "returns the status of the test with the id '123'" do
-        test_run = mock
-        test_run.stub!(:status).and_return 'a status'
+        test_run = mock(:test_run)
+        test_result = mock(:test_result)
+        test_result.stub!(:to_json).and_return("the test run as json")
+        test_run.stub!(:result).and_return(test_result)
         TestRun.should_receive(:find).with('123').and_return test_run
         get '/test_runs/123'
-        last_response.body.should == 'a status'
+        last_response.body.should == "the test run as json"
       end
     end
     

@@ -1,3 +1,5 @@
+require 'spassky/test_result'
+
 module Spassky
   class TestRun
     attr_accessor :name, :contents, :id
@@ -14,11 +16,16 @@ module Spassky
     end
     
     def save_results_for_user_agent(options)
+      unless ['pass', 'fail'].include? options[:status]
+        raise "#{options[:status]} is not a valid status"
+      end
       @status_by_user_agent[options[:user_agent]] = options[:status]
     end
     
-    def status
-      @status_by_user_agent.size == 0 ? "in progress" : @status_by_user_agent[@status_by_user_agent.keys.first]
+    def result
+      TestResult.new(@status_by_user_agent.map { |user_agent, status|
+        DeviceTestStatus.new(user_agent, status)
+      })
     end
     
     def self.create(options)

@@ -7,7 +7,7 @@ module Spassky
     def run_test(test_name)
       file_contents = File.read(test_name)
       @pusher.push(:name => test_name, :contents => file_contents) do |result|
-        Kernel.puts "1 test #{result}ed"
+        Kernel.puts result.summary
       end
     end
   end

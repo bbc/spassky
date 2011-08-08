@@ -12,7 +12,7 @@ module Spassky
       @pusher = Pusher.new(@server_url, @sleeper)
       RestClient.stub!(:post).with("http://foo/test_runs", "test contents"
         ).and_yield(@response, nil, nil)
-      RestClient.stub!(:get)
+      RestClient.stub!(:get).and_return(passed_status)
     end
     
     it "pushes a test to the server" do
@@ -31,29 +31,41 @@ module Spassky
         end
       }.should raise_error("Expected http://foo/test_runs to respond with 302")
     end
-        
+
+    def in_progress_status
+      TestResult.new([DeviceTestStatus.new('agent', 'in progress')]).to_json
+    end
+    
+    def passed_status
+      TestResult.new([DeviceTestStatus.new('agent', 'pass')]).to_json
+    end
+    
+    def failed_status
+      TestResult.new([DeviceTestStatus.new('agent', 'fail')]).to_json
+    end
+    
     it "polls the URL returned until the test passes" do
-      RestClient.should_receive(:get).with("http://poll/me").and_return("in progress", "in progress", "in progress", "pass")
+      RestClient.should_receive(:get).with("http://poll/me").and_return(in_progress_status, in_progress_status, in_progress_status, passed_status)
       @pusher.push("test contents") do |result|
       end
     end
     
     it "polls the URL returned until the test fails" do
-      RestClient.should_receive(:get).and_return("in progress", "in progress", "fail")
+      RestClient.should_receive(:get).and_return(in_progress_status, in_progress_status, failed_status)
       @pusher.push("test contents") {}
     end
     
     it "yields the outcome of the test to the block" do
-      RestClient.stub!(:get).and_return("pass")
+      RestClient.stub!(:get).and_return(passed_status)
       yielded_result = ""
       Pusher.new(@server_url).push("test contents") do |result|
         yielded_result = result
       end
-      yielded_result.should == "pass"
+      yielded_result.to_json.should == passed_status
     end
     
     it "sleeps while looping during get requests" do
-      RestClient.stub!(:get).and_return("in progress", "in progress", "in progress", "pass")
+      RestClient.stub!(:get).and_return(in_progress_status, in_progress_status, in_progress_status, passed_status)
       @sleeper.should_receive(:sleep).with(0.4).exactly(3).times
       @pusher.push("test contents") { |result| }
     end

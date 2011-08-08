@@ -27,9 +27,10 @@ Feature: Test Run
     When I run "spassky <host> passing.html" with the server host 
     Then the output should contain:
       """
-      1 test passed
+      1 test passed on 1 device
       """
 
+    @wip
     Scenario: One passing test on two devices
       Given a connected mobile device "first"
       And a connected mobile device "second"
@@ -39,7 +40,7 @@ Feature: Test Run
             <head>
             </head>
             <body>
-            <h1>My first passing test!</h1>
+            <h1>My second passing test!</h1>
             <script type="text/javascript">
             assert(true, 'this test should pass');
             </script>
