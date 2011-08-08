@@ -1,4 +1,3 @@
-@javascript
 Feature: Test Run
   
   In order to inform design decisions
