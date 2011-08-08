@@ -11,10 +11,10 @@ module Spassky
       test_runs_url = @server_url.gsub(/\/$/, "") + "/test_runs"
     end
     
-    def push(test_contents)
+    def push(options)
       location = nil
     
-      RestClient.post(test_runs_url, test_contents) do |response, request, result|
+      RestClient.post(test_runs_url, options) do |response, request, result|
         location = response.headers[:location]
       end
       raise "Expected #{test_runs_url} to respond with 302" unless location

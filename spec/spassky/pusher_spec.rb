@@ -16,9 +16,9 @@ module Spassky
     end
     
     it "pushes a test to the server" do
-      RestClient.should_receive(:post).with("http://foo/test_runs", "test contents"
+      RestClient.should_receive(:post).with("http://foo/test_runs", {:contents => 'test contents'}
         ).and_yield(@response, nil, nil)
-      @pusher.push("test contents") do |result|
+      @pusher.push({:contents => "test contents"}) do |result|
       end
     end
     
