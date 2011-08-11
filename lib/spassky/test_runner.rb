@@ -11,14 +11,18 @@ module Spassky
     def run_test(test_name)
       file_contents = File.read(test_name)
       @pusher.push(:name => test_name, :contents => file_contents) do |result|
-        if @options[:colour]
-          @output.puts(result.summary.color(:red)) if result.status == 'fail'
-          @output.puts(result.summary.color(:green)) if result.status == 'pass'
-        else
-          @output.puts result.summary
-        end
+        write_output result
         Kernel.exit(1) if result.status == 'fail'
       end
+    end
+
+    def write_output test_result
+      colour = :default
+      if @options[:colour]
+        colour = test_result.status == 'pass' ? :green : :red
+        @output.puts test_result.summary.color(colour)
+      end
+      @output.puts test_result.summary
     end
   end
 end
