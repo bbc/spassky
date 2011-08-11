@@ -1,13 +1,22 @@
+require 'rainbow'
+
 module Spassky
   class TestRunner
-    def initialize(pusher) 
+    def initialize(pusher, output, options)
       @pusher = pusher
+      @output = output
+      @options = options
     end
-    
+
     def run_test(test_name)
       file_contents = File.read(test_name)
       @pusher.push(:name => test_name, :contents => file_contents) do |result|
-        Kernel.puts result.summary
+        if @options[:colour]
+          @output.puts(result.summary.color(:red)) if result.status == 'fail'
+          @output.puts(result.summary.color(:green)) if result.status == 'pass'
+        else
+          @output.puts result.summary
+        end
       end
     end
   end
