@@ -8,6 +8,7 @@ module Spassky
       @test_pusher = mock(:test_pusher)
       @test_result = mock(:test_result)
       @test_result.stub!(:summary).and_return("hello")
+      @test_result.stub!(:status).and_return("pass")
       @output = mock(:output)
       @output.stub!(:puts)
       File.stub!(:read).and_return('contents')
@@ -32,11 +33,21 @@ module Spassky
 
     context "options contain colour flag" do
       context "failing test" do
-        it "writes output in red" do
+        before do
           @test_result.stub!(:status).and_return("fail")
           @test_pusher.stub!(:push).and_yield(@test_result)
+          Kernel.stub!(:exit)
+          @test_runner = TestRunner.new(@test_pusher, @output, {:colour => true})
+        end
+
+        it "writes output in red" do
           @output.should_receive(:puts).with("\e[31mhello\e[0m")
-          TestRunner.new(@test_pusher, @output, {:colour => true}).run_test("foo_test")
+          @test_runner.run_test("foo_test")
+        end
+
+        it "writes out an error code" do
+          Kernel.should_receive(:exit).with(1)
+          @test_runner.run_test("foo_test")
         end
       end
 

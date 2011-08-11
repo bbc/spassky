@@ -17,6 +17,7 @@ module Spassky
         else
           @output.puts result.summary
         end
+        Kernel.exit(1) if result.status == 'fail'
       end
     end
   end
