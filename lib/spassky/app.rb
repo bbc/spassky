@@ -7,7 +7,7 @@ module Spassky
     get '/device/connect' do
       redirect '/device/idle/' + RandomStringGenerator.random_string
     end
-    
+
     get '/device/idle/:random' do
       seconds = 1
       test_run = TestRun.find_next_to_run_for_user_agent(request.user_agent)
@@ -20,23 +20,23 @@ module Spassky
         "<html><head>#{meta_refresh}</head></html>"
       end
     end
-    
+
     post '/test_runs' do
       TestRun.create({:name => params[:name], :contents => params[:contents]})
       redirect "/test_runs/#{RandomStringGenerator.random_string}"
     end
-    
+
     get '/test_runs/:id' do
       TestRun.find(params[:id]).result.to_json
     end
-    
+
     get '/test_runs/:id/run/assert' do
       TestRun.find(params[:id]).save_results_for_user_agent(
         :user_agent => request.user_agent,
         :status => params[:status]
       )
     end
-    
+
     get '/test_runs/:id/run/:random' do
       seconds = 1
       test_run = TestRun.find(params[:id])

@@ -18,6 +18,19 @@ Feature: Test Run
           </body>
         </html>
       """
+    And a file named "failing.html" with:
+      """
+        <html>
+          <head>
+          </head>
+          <body>
+          <h1>My first passing test!</h1>
+          <script type="text/javascript">
+          assert(false, 'this test should pass');
+          </script>
+          </body>
+        </html>
+      """
 
   Scenario: One passing test on one device
     Given a connected mobile device "ipad"
@@ -35,3 +48,8 @@ Feature: Test Run
       """
       1 test passed on 2 devices
       """
+
+  Scenario: Failing test
+    Given a connected mobile device "iPhone"
+    When I run "spassky <host> failing.html" with the server host
+    Then the exit status should be 1
