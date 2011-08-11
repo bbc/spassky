@@ -10,6 +10,10 @@ module Spassky
       super()
     end
     
+    get "/devices/clear" do
+      @device_list.clear
+    end
+    
     get '/device/connect' do
       redirect '/device/idle/' + RandomStringGenerator.random_string
     end
@@ -47,12 +51,11 @@ module Spassky
     end
 
     get '/test_runs/:id/run/:random' do
-      seconds = 1
       test_run = TestRun.find(params[:id])
       assert_js_contents  = File.read(File.join(File.dirname(__FILE__), 'assert.js'))
       assert_js_with_script_tag ="<script type=\"text/javascript\">#{assert_js_contents}</script>"
       url = "/device/idle/" + RandomStringGenerator.random_string
-      meta_refresh = "<meta http-equiv=\"refresh\" content=\"#{seconds}; url='#{url}'\">"
+      meta_refresh = "<meta http-equiv=\"refresh\" content=\"1; url='#{url}'\">"
       test_run.contents.gsub('</head>', assert_js_with_script_tag + meta_refresh + '</head>')
     end
   end

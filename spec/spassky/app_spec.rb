@@ -20,7 +20,7 @@ module Spassky
     end
     
     let :device_list do
-      mock(:device_list, :update_last_connected => true)
+      mock(:device_list, :update_last_connected => true, :recently_connected_devices => [])
     end
     
     describe "GET /device/connect" do

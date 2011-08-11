@@ -8,5 +8,9 @@ module Spassky
     def recently_connected_devices
       @devices.keys
     end
+    
+    def clear
+      @devices = {}
+    end
   end
 end

@@ -13,6 +13,7 @@ Capybara.app = Spassky::App
 Before do
   Capybara.default_driver = :selenium
   @aruba_timeout_seconds = 5
+  visit "/devices/clear"
 end
 
 def register_driver_with_user_agent user_agent
