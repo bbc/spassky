@@ -39,6 +39,7 @@ Feature: Test Run
       """
       1 test passed on 1 device
       """
+    And the exit status should be 0
 
   Scenario: One passing test on two devices
     Given a connected mobile device "first"
@@ -48,8 +49,13 @@ Feature: Test Run
       """
       1 test passed on 2 devices
       """
+    Then the exit status should be 0
 
   Scenario: Failing test
     Given a connected mobile device "iPhone"
     When I run "spassky <host> failing.html" with the server host
-    Then the exit status should be 1
+    Then the output should contain:
+      """
+      1 test failed on 1 device
+      """
+    And the exit status should be 1
