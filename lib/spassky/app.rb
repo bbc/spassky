@@ -1,29 +1,38 @@
 require 'sinatra/base'
 require 'spassky/random_string_generator'
 require 'spassky/test_run'
+require 'spassky/device_list'
 
 module Spassky
   class App < Sinatra::Base
+    def initialize(device_list=DeviceList.new)
+      @device_list = device_list
+      super()
+    end
+    
     get '/device/connect' do
       redirect '/device/idle/' + RandomStringGenerator.random_string
     end
 
     get '/device/idle/:random' do
-      seconds = 1
       test_run = TestRun.find_next_to_run_for_user_agent(request.user_agent)
-
+      @device_list.update_last_connected(request.user_agent)
       if test_run
         redirect "/test_runs/#{test_run.id}/run/#{RandomStringGenerator.random_string}"
       else
         url = "/device/idle/" + RandomStringGenerator.random_string
-        meta_refresh = "<meta http-equiv=\"refresh\" content=\"#{seconds}; url='#{url}'\">"
+        meta_refresh = "<meta http-equiv=\"refresh\" content=\"1; url='#{url}'\">"
         "<html><head>#{meta_refresh}</head></html>"
       end
     end
 
     post '/test_runs' do
-      TestRun.create({:name => params[:name], :contents => params[:contents]})
-      redirect "/test_runs/#{RandomStringGenerator.random_string}"
+      run = TestRun.create({
+        :name => params[:name],
+        :contents => params[:contents],
+        :devices => @device_list.recently_connected_devices
+      })
+      redirect "/test_runs/#{run.id}"
     end
 
     get '/test_runs/:id' do

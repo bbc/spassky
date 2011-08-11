@@ -16,7 +16,11 @@ module Spassky
     end
     
     def app
-      App
+      App.new(device_list)
+    end
+    
+    let :device_list do
+      mock(:device_list, :update_last_connected => true)
     end
     
     describe "GET /device/connect" do
@@ -30,14 +34,18 @@ module Spassky
     
     describe "GET /device/idle/123" do
       
+      it "tells the device list that the device connected" do
+        device_list.should_receive(:update_last_connected).with("some user agent")
+        header "User-Agent", "some user agent"
+        get "/device/idle/123"
+      end
+      
       describe "when there are no tests to run on the connected device" do
         it "serves HTML page with a meta-refresh tag" do
           TestRun.stub!(:find_next_to_run_for_user_agent).and_return(nil)
           RandomStringGenerator.should_receive(:random_string).and_return("next-iteration")
           get "/device/idle/123"
-          seconds = 1
-          url = "/device/idle/next-iteration"
-          last_response.body.should include("<meta http-equiv=\"refresh\" content=\"#{seconds}; url='#{url}'\">")
+          last_response.body.should include("<meta http-equiv=\"refresh\" content=\"1; url='/device/idle/next-iteration'\">")
         end        
       end
       
@@ -96,19 +104,22 @@ module Spassky
     
     describe "POST /test_runs" do
       before do
-        TestRun.stub!(:create).with(:name => "first-test", :contents => "test-contents")
+        device_list.stub!(:recently_connected_devices).and_return(["foo", "bar"])
+        @test_run = mock(:test_run)
+        @test_run.stub!(:id).and_return(42)
+        TestRun.stub!(:create).and_return(@test_run)
         RandomStringGenerator.stub!(:random_string).and_return("number")
       end
       
       it "creates a test run" do
-        TestRun.should_receive(:create).with(:name => "first-test", :contents => "test-contents")
-        post "/test_runs", { :name => "first-test", :contents => "test-contents"}
+        TestRun.should_receive(:create).with(:name => "first-test", :contents => "test-contents", :devices => ["foo", "bar"])
+        post "/test_runs", { :name => "first-test", :contents => "test-contents" }
       end
       
       it "redirects to the status page" do
         post "/test_runs", { :name => "first-test", :contents => "test-contents"}
         last_response.should be_redirect
-        last_response.location.should =~ /test_runs\/number$/
+        last_response.location.should =~ /test_runs\/42$/
       end
     end
     

@@ -10,6 +10,7 @@ Given /^a connected mobile device "([^"]*)"$/ do |user_agent|
 end
 
 When /^I run "([^"]*)" with the server host$/ do |command_line|
+  sleep 4
   run_simple(unescape(command_line.gsub('<host>', "http://#{@uri.host}:#{@uri.port}")), false)
 end
 

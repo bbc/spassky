@@ -24,7 +24,7 @@ Feature: Test Run
           <head>
           </head>
           <body>
-          <h1>My first passing test!</h1>
+          <h1>My first FAILING test!</h1>
           <script type="text/javascript">
           assert(false, 'this test should pass');
           </script>
@@ -41,6 +41,7 @@ Feature: Test Run
       """
     And the exit status should be 0
 
+  @wip
   Scenario: One passing test on two devices
     Given a connected mobile device "first"
     And a connected mobile device "second"
