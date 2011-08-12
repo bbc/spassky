@@ -33,7 +33,7 @@ Feature: Test Run
       """
 
   Scenario: One passing test on one device
-    Given a connected mobile device "ipad"
+    Given a connected mobile device "first"
     When I run "spassky <host> passing.html" with the server host 
     Then the output should contain:
       """
@@ -52,7 +52,7 @@ Feature: Test Run
     Then the exit status should be 0
 
   Scenario: Failing test
-    Given a connected mobile device "iPhone"
+    Given a connected mobile device "first"
     When I run "spassky <host> failing.html" with the server host
     Then the output should contain:
       """
