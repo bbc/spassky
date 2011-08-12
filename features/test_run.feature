@@ -41,7 +41,6 @@ Feature: Test Run
       """
     And the exit status should be 0
 
-  @wip
   Scenario: One passing test on two devices
     Given a connected mobile device "first"
     And a connected mobile device "second"

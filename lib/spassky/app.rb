@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'spassky/random_string_generator'
 require 'spassky/test_run'
 require 'spassky/device_list'
+require 'spassky/html_test'
 
 module Spassky
   class App < Sinatra::Base
@@ -15,21 +16,19 @@ module Spassky
     end
     
     get '/device/connect' do
-      redirect '/device/idle/' + RandomStringGenerator.random_string
+      redirect idle_url
     end
 
     get '/device/idle/:random' do
       test_run = TestRun.find_next_to_run_for_user_agent(request.user_agent)
       @device_list.update_last_connected(request.user_agent)
       if test_run
-        redirect "/test_runs/#{test_run.id}/run/#{RandomStringGenerator.random_string}"
+        run_test(test_run)
       else
-        url = "/device/idle/" + RandomStringGenerator.random_string
-        meta_refresh = "<meta http-equiv=\"refresh\" content=\"1; url='#{url}'\">"
-        "<html><head>#{meta_refresh}</head></html>"
+        stay_in_meta_refresh_loop
       end
     end
-
+    
     post '/test_runs' do
       run = TestRun.create({
         :name => params[:name],
@@ -52,11 +51,23 @@ module Spassky
 
     get '/test_runs/:id/run/:random' do
       test_run = TestRun.find(params[:id])
-      assert_js_contents  = File.read(File.join(File.dirname(__FILE__), 'assert.js'))
-      assert_js_with_script_tag ="<script type=\"text/javascript\">#{assert_js_contents}</script>"
-      url = "/device/idle/" + RandomStringGenerator.random_string
-      meta_refresh = "<meta http-equiv=\"refresh\" content=\"1; url='#{url}'\">"
-      test_run.contents.gsub('</head>', assert_js_with_script_tag + meta_refresh + '</head>')
+      html_test = HtmlTest.new(test_run.contents)
+      html_test.add_meta_refresh_tag("/device/idle/" + RandomStringGenerator.random_string, 1)
+      html_test.html
+    end
+    
+    private
+    
+    def run_test(test_run)
+      redirect "/test_runs/#{test_run.id}/run/#{RandomStringGenerator.random_string}"
+    end
+    
+    def idle_url
+      "/device/idle/" + RandomStringGenerator.random_string
+    end
+    
+    def stay_in_meta_refresh_loop
+      "<html><head><meta http-equiv=\"refresh\" content=\"1; url='#{idle_url}'\"></head></html>"
     end
   end
 end

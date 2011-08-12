@@ -14,10 +14,14 @@ module Spassky
       "pass"
     end
     
+    def count_fails
+      @device_statuses.count { |s| s.status == "fail" }
+    end
+    
     def summary
       count = @device_statuses.size
       status = "passed"
-      fail_count = @device_statuses.count { |s| s.status == "fail" }
+      fail_count = count_fails
       if fail_count > 0
         status = "failed"
         count = fail_count
