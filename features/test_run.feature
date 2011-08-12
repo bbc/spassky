@@ -4,7 +4,7 @@ Feature: Test Run
   As a mobile tester
   I want to collate test results from multiple devices
 
-  Background: A passing test
+  Background: Two tests, one passes, one fails
     Given a file named "passing.html" with:
       """
         <html>
@@ -26,7 +26,7 @@ Feature: Test Run
           <body>
           <h1>My first FAILING test!</h1>
           <script type="text/javascript">
-          assert(false, 'this test should pass');
+          assert(false, 'this test should fail');
           </script>
           </body>
         </html>

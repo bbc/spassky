@@ -17,5 +17,16 @@ module Spassky::Server
       list.clear
       list.recently_connected_devices.size.should == 0
     end
+    
+    it "ignores devices connected more than 3 seconds ago" do
+      list = DeviceList.new
+      now = Time.now
+      Time.stub!(:now).and_return(now - 3)
+      list.update_last_connected("a")
+      Time.stub!(:now).and_return(now - 2)
+      list.update_last_connected("b")
+      Time.stub!(:now).and_return(now)
+      list.recently_connected_devices.should == ["b"]
+    end
   end
 end

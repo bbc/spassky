@@ -70,5 +70,29 @@ module Spassky::Server
       run.result.device_statuses.first.status.should == "in progress"
       run.result.device_statuses.last.status.should == "in progress"
     end
+
+    it "updates the status of disconnected devices to 'timed out'" do
+      run = TestRun.create(
+        :name => "another test",
+        :contents => "the contents of the test",
+        :devices => ["device1", "device2"]
+      )
+      run.update_connected_devices(["device1"])
+      run.result.device_statuses.first.status.should == "in progress"
+      run.result.device_statuses.last.status.should == "timed out"
+    end
+    
+    it "does not update the status of disconnected devices that have already passed or failed" do
+      run = TestRun.create(
+        :name => "another test",
+        :contents => "the contents of the test",
+        :devices => ["device1", "device2"]
+      )
+      run.save_results_for_user_agent(:user_agent => "device1", :status => "pass")
+      run.save_results_for_user_agent(:user_agent => "device2", :status => "fail")
+      run.update_connected_devices([])
+      run.result.device_statuses.first.status.should == "pass"
+      run.result.device_statuses.last.status.should == "fail"
+    end
   end
 end

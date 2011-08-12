@@ -129,9 +129,22 @@ module Spassky::Server
         test_result = mock(:test_result)
         test_result.stub!(:to_json).and_return("the test run as json")
         test_run.stub!(:result).and_return(test_result)
+        test_run.stub!(:update_connected_devices)
         TestRun.should_receive(:find).with('123').and_return test_run
         get '/test_runs/123'
         last_response.body.should == "the test run as json"
+      end
+
+      it "tells the test run which devices are still connected" do
+        test_run = mock(:test_run)
+        test_result = mock(:test_result)
+        test_result.stub!(:to_json).and_return("the test run as json")
+        test_run.stub!(:result).and_return(test_result)
+        TestRun.stub!(:find).with('123').and_return test_run
+        still_connected_devices = ["device1", "device2"]
+        device_list.stub!(:recently_connected_devices).and_return(still_connected_devices)
+        test_run.should_receive(:update_connected_devices).with(still_connected_devices)
+        get '/test_runs/123'
       end
     end
     

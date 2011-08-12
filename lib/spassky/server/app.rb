@@ -39,7 +39,9 @@ module Spassky::Server
     end
 
     get '/test_runs/:id' do
-      TestRun.find(params[:id]).result.to_json
+      run = TestRun.find(params[:id])
+      run.update_connected_devices(@device_list.recently_connected_devices)
+      run.result.to_json
     end
 
     get '/test_runs/:id/run/assert' do

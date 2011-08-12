@@ -1,16 +1,18 @@
 module Spassky::Server
   class DeviceList
     def update_last_connected user_agent
-      @devices ||= {}
-      @devices[user_agent] = true   
+      @devices_and_time_last_connected ||= {}
+      @devices_and_time_last_connected[user_agent] = Time.now  
     end
     
     def recently_connected_devices
-      @devices.keys
+      @devices_and_time_last_connected.keys.select do |user_agent|
+        Time.now.to_f - @devices_and_time_last_connected[user_agent].to_f < 3
+      end
     end
     
     def clear
-      @devices = {}
+      @devices_and_time_last_connected = {}
     end
   end
 end

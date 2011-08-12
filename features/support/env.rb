@@ -14,7 +14,7 @@ Capybara.app = Spassky::Server::App
 
 Before do
   Capybara.default_driver = :selenium
-  @aruba_timeout_seconds = 5
+  @aruba_timeout_seconds = 8
   visit "/devices/clear"
 end
 

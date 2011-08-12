@@ -61,6 +61,15 @@ module Spassky
       end
     end
     
+     context "when 1 test timeouts" do
+      it "outputs the correct summary" do
+        test_result = TestResult.new([
+          Spassky::DeviceTestStatus.new('agent1', 'timed out')
+        ])
+        test_result.summary.should == "1 test timed out on 1 device"
+      end 
+    end
+    
     it "can be serialized and deserialized" do
       test_result = TestResult.new([Spassky::DeviceTestStatus.new('agent', 'pass')])
       json = test_result.to_json
@@ -69,5 +78,6 @@ module Spassky
       deserialized.device_statuses.first.user_agent.should == 'agent'
       deserialized.device_statuses.first.status.should == 'pass'      
     end
+
   end
 end

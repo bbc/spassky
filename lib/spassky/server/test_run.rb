@@ -24,6 +24,14 @@ module Spassky::Server
       @status_by_user_agent[options[:user_agent]] = options[:status]
     end
     
+    def update_connected_devices(user_agents)
+      @status_by_user_agent.each do |user_agent, status|
+        if !user_agents.include?(user_agent) && status == "in progress"
+          @status_by_user_agent[user_agent] = "timed out"
+        end
+      end
+    end
+    
     def result
       Spassky::TestResult.new(@status_by_user_agent.map { |user_agent, status|
         Spassky::DeviceTestStatus.new(user_agent, status)

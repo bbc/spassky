@@ -23,3 +23,13 @@ Then /^it should wait for a test to run$/ do
     urls.uniq.size.should eq(3), "expected 3 different urls, got:\n" + urls.join("\n")
   end
 end
+
+Given /^a connected mobile device$/ do
+  Given "a connected mobile device \"the device\""
+end
+
+When /^the device disconnects$/ do
+  using_session("the device") do
+    visit "/device/disconnect"
+  end
+end

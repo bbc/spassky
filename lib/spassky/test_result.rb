@@ -18,17 +18,26 @@ module Spassky
       @device_statuses.count { |s| s.status == "fail" }
     end
     
+    def count_timeouts
+      @device_statuses.count { |s| s.status == "timed out" }
+    end
+    
     def summary
+      result = "?"
       count = @device_statuses.size
-      status = "passed"
-      fail_count = count_fails
-      if fail_count > 0
-        status = "failed"
-        count = fail_count
+      if count_timeouts > 0
+        result = "1 test timed out on #{count} device"
+      else
+        status = "passed"
+        fail_count = count_fails
+        if fail_count > 0
+          status = "failed"
+          count = fail_count
+        end
+        result = "1 test #{status} on #{count} device"
       end
-      result = "1 test #{status} on #{count} device"
       result << "s" if @device_statuses.size > 1
-      result
+      return result
     end
     
     def to_json
