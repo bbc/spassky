@@ -61,13 +61,21 @@ module Spassky
       end
     end
     
-     context "when 1 test timeouts" do
+    context "when 1 test timeouts" do
       it "outputs the correct summary" do
         test_result = TestResult.new([
           Spassky::DeviceTestStatus.new('agent1', 'timed out')
         ])
         test_result.summary.should == "1 test timed out on 1 device"
-      end 
+      end
+      
+      it "has the status 'timed out'" do
+        test_result = TestResult.new([
+          Spassky::DeviceTestStatus.new('agent1', 'timed out'),
+          Spassky::DeviceTestStatus.new('agent2', 'pass')
+        ])
+        test_result.status.should == "timed out"
+      end
     end
     
     it "can be serialized and deserialized" do

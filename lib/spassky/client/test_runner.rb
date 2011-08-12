@@ -13,6 +13,7 @@ module Spassky::Client
       @pusher.push(:name => test_name, :contents => file_contents) do |result|
         write_output result
         Kernel.exit(1) if result.status == 'fail'
+        Kernel.exit(2) if result.status == 'timed out'
       end
     end
 

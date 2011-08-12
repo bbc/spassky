@@ -10,6 +10,7 @@ module Spassky::Client
       @test_result.stub!(:status).and_return("pass")
       @output = mock(:output)
       @output.stub!(:puts)
+      Kernel.stub!(:exit)
       File.stub!(:read).and_return('contents')
     end
 
@@ -29,13 +30,22 @@ module Spassky::Client
       @test_pusher.stub!(:push).and_yield(@test_result)
       TestRunner.new(@test_pusher, @output, {}).run_test("foo_test")
     end
+    
+    context "timeout" do
+      it 'returns a exit status of 2' do
+        @test_result.stub!(:status).and_return("timed out")
+        @test_pusher.stub!(:push).and_yield(@test_result)
+        @test_runner = TestRunner.new(@test_pusher, @output, {:colour => true})
+        Kernel.should_receive(:exit).with(2)
+        @test_runner.run_test("foo_test")
+      end
+    end
 
     context "options contain colour flag" do
       context "failing test" do
         before do
           @test_result.stub!(:status).and_return("fail")
           @test_pusher.stub!(:push).and_yield(@test_result)
-          Kernel.stub!(:exit)
           @test_runner = TestRunner.new(@test_pusher, @output, {:colour => true})
         end
 
@@ -54,7 +64,7 @@ module Spassky::Client
           @test_runner.run_test("foo_test")
         end
       end
-
+      
       context "passing test" do
         it "writes output in green" do
           @test_result.stub!(:status).and_return("pass")
