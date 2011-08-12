@@ -21,8 +21,9 @@ module Spassky
       if @options[:colour]
         colour = test_result.status == 'pass' ? :green : :red
         @output.puts test_result.summary.color(colour)
+      else
+        @output.puts test_result.summary
       end
-      @output.puts test_result.summary
     end
   end
 end

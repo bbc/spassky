@@ -44,6 +44,11 @@ module Spassky
           @output.should_receive(:puts).with("\e[31mhello\e[0m")
           @test_runner.run_test("foo_test")
         end
+        
+        it "only writes once" do
+          @output.should_receive(:puts).once
+          @test_runner.run_test("foo_test")
+        end
 
         it "writes out an error code" do
           Kernel.should_receive(:exit).with(1)
