@@ -1,8 +1,7 @@
 require 'spec_helper'
+require 'spassky/client/pusher'
 
-require 'spassky/pusher'
-
-module Spassky
+module Spassky::Client
   describe Pusher do
     before do
       @response = mock("response", :code => 302, :headers => { :location => "http://poll/me" })
@@ -33,15 +32,15 @@ module Spassky
     end
 
     def in_progress_status
-      TestResult.new([DeviceTestStatus.new('agent', 'in progress')]).to_json
+      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'in progress')]).to_json
     end
     
     def passed_status
-      TestResult.new([DeviceTestStatus.new('agent', 'pass')]).to_json
+      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'pass')]).to_json
     end
     
     def failed_status
-      TestResult.new([DeviceTestStatus.new('agent', 'fail')]).to_json
+      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'fail')]).to_json
     end
     
     it "polls the URL returned until the test passes" do

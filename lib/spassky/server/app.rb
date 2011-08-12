@@ -1,10 +1,10 @@
 require 'sinatra/base'
-require 'spassky/random_string_generator'
-require 'spassky/test_run'
-require 'spassky/device_list'
-require 'spassky/html_test'
+require 'spassky/server/random_string_generator'
+require 'spassky/server/test_run'
+require 'spassky/server/device_list'
+require 'spassky/server/html_test'
 
-module Spassky
+module Spassky::Server
   class App < Sinatra::Base
     def initialize(device_list=DeviceList.new)
       @device_list = device_list

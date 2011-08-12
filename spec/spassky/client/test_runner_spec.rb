@@ -1,8 +1,7 @@
 require 'spec_helper'
+require 'spassky/client/test_runner'
 
-require 'spassky/test_runner'
-
-module Spassky
+module Spassky::Client
   describe TestRunner do
     before do
       @test_pusher = mock(:test_pusher)

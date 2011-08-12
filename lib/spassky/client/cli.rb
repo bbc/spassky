@@ -1,7 +1,7 @@
-require 'spassky/test_runner'
-require 'spassky/pusher'
+require 'spassky/client/test_runner'
+require 'spassky/client/pusher'
 
-module Spassky
+module Spassky::Client
   class Cli
     def self.run(argv)
       options = {}

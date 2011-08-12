@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'spassky/random_string_generator'
+require 'spassky/server/random_string_generator'
 
-module Spassky
+module Spassky::Server
   describe RandomStringGenerator do
     it "returns the current ticks" do
       now = mock

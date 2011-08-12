@@ -1,4 +1,4 @@
-module Spassky
+module Spassky::Server
   class DeviceList
     def update_last_connected user_agent
       @devices ||= {}

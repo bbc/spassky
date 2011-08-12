@@ -1,6 +1,6 @@
 require 'spassky/test_result'
 
-module Spassky
+module Spassky::Server
   class TestRun
     attr_accessor :name, :contents, :id
     
@@ -25,8 +25,8 @@ module Spassky
     end
     
     def result
-      TestResult.new(@status_by_user_agent.map { |user_agent, status|
-        DeviceTestStatus.new(user_agent, status)
+      Spassky::TestResult.new(@status_by_user_agent.map { |user_agent, status|
+        Spassky::DeviceTestStatus.new(user_agent, status)
       })
     end
     

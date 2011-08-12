@@ -5,9 +5,9 @@ require 'capybara/dsl'
 require 'rack/test'
 require 'json'
 
-require 'spassky/app'
+require 'spassky/server/app'
 
-module Spassky
+module Spassky::Server
   describe App do
     include Rack::Test::Methods
     

@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'spassky/device_list'
+require 'spassky/server/device_list'
 
-module Spassky
+module Spassky::Server
   describe DeviceList do
     it "keeps track of when devices last connected" do
       list = DeviceList.new

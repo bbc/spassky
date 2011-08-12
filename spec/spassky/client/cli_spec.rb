@@ -1,8 +1,7 @@
 require 'spec_helper'
+require 'spassky/client/cli'
 
-require 'spassky/cli'
-
-module Spassky
+module Spassky::Client
   describe Cli do
     let :pusher do
       mock(:pusher)

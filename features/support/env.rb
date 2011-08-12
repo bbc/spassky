@@ -4,11 +4,13 @@ require 'capybara/cucumber'
 
 require 'aruba/cucumber'
 
-require File.join(File.dirname(__FILE__), '../../lib/spassky')
+$:.unshift(File.join(File.dirname(__FILE__), '../../lib'))
+require 'spassky'
+require 'spassky/server'
 
 World(Capybara::DSL)
 
-Capybara.app = Spassky::App
+Capybara.app = Spassky::Server::App
 
 Before do
   Capybara.default_driver = :selenium

@@ -1,4 +1,4 @@
-module Spassky
+module Spassky::Server
   class HtmlTest
     def initialize(original_html)
       @html = original_html

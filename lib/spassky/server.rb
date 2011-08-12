@@ -1,0 +1,1 @@
+require 'spassky/server/app'

@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'spassky/test_run'
+require 'spassky/server/test_run'
 
-module Spassky
+module Spassky::Server
   describe TestRun do
     before do
       TestRun.delete_all

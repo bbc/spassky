@@ -1,6 +1,6 @@
 require 'rainbow'
 
-module Spassky
+module Spassky::Client
   class TestRunner
     def initialize(pusher, output, options)
       @pusher = pusher
