@@ -11,7 +11,7 @@ Feature: Test Run
           <head>
           </head>
           <body>
-          <h1>My first passing test!</h1>
+          <h1>A PASSING test!</h1>
           <script type="text/javascript">
           assert(true, 'this test should pass');
           </script>
@@ -24,7 +24,7 @@ Feature: Test Run
           <head>
           </head>
           <body>
-          <h1>My first FAILING test!</h1>
+          <h1>A FAILING test!</h1>
           <script type="text/javascript">
           assert(false, 'this test should fail');
           </script>
@@ -33,29 +33,33 @@ Feature: Test Run
       """
 
   Scenario: One passing test on one device
-    Given a connected mobile device "first"
+    Given a connected mobile device "blackberry"
     When I run "spassky <host> passing.html" with the server host 
     Then the output should contain:
       """
-      1 test passed on 1 device
+      PASS passing.html on blackberry
       """
     And the exit status should be 0
 
   Scenario: One passing test on two devices
-    Given a connected mobile device "first"
-    And a connected mobile device "second"
+    Given a connected mobile device "blackberry"
+    And a connected mobile device "iphone"
     When I run "spassky <host> passing.html" with the server host 
     Then the output should contain:
       """
-      1 test passed on 2 devices
+      PASS passing.html on blackberry
+      """
+    Then the output should contain:
+      """
+      PASS passing.html on iphone
       """
     Then the exit status should be 0
 
   Scenario: Failing test
-    Given a connected mobile device "first"
+    Given a connected mobile device "blackberry"
     When I run "spassky <host> failing.html" with the server host
     Then the output should contain:
       """
-      1 test failed on 1 device
+      FAIL failing.html on blackberry
       """
     And the exit status should be 1

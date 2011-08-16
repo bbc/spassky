@@ -24,12 +24,8 @@ Then /^it should wait for a test to run$/ do
   end
 end
 
-Given /^a connected mobile device$/ do
-  Given "a connected mobile device \"the device\""
-end
-
 When /^the device disconnects$/ do
-  using_session("the device") do
+  using_session(@last_user_agent) do
     visit "/device/disconnect"
   end
 end

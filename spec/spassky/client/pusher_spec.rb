@@ -14,6 +14,18 @@ module Spassky::Client
       RestClient.stub!(:get).and_return(passed_status)
     end
     
+    def in_progress_status
+      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'in progress', 'test')]).to_json
+    end
+    
+    def passed_status
+      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'pass', 'test')]).to_json
+    end
+    
+    def failed_status
+      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'fail', 'test')]).to_json
+    end
+    
     it "pushes a test to the server" do
       RestClient.should_receive(:post).with("http://foo/test_runs", {:contents => 'test contents'}
         ).and_yield(@response, nil, nil)
@@ -31,18 +43,6 @@ module Spassky::Client
       }.should raise_error("Expected http://foo/test_runs to respond with 302")
     end
 
-    def in_progress_status
-      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'in progress')]).to_json
-    end
-    
-    def passed_status
-      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'pass')]).to_json
-    end
-    
-    def failed_status
-      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'fail')]).to_json
-    end
-    
     it "polls the URL returned until the test passes" do
       RestClient.should_receive(:get).with("http://poll/me").and_return(in_progress_status, in_progress_status, in_progress_status, passed_status)
       @pusher.push("test contents") do |result|
@@ -55,12 +55,12 @@ module Spassky::Client
     end
     
     it "yields the outcome of the test to the block" do
-      RestClient.stub!(:get).and_return(passed_status)
-      yielded_result = ""
-      Pusher.new(@server_url).push("test contents") do |result|
-        yielded_result = result
+      RestClient.stub!(:get).and_return(in_progress_status, in_progress_status, passed_status)
+      yielded_results = []
+      @pusher.push("test contents") do |result|
+        yielded_results << result.to_json
       end
-      yielded_result.to_json.should == passed_status
+      yielded_results.should == [in_progress_status, in_progress_status, passed_status]
     end
     
     it "sleeps while looping during get requests" do

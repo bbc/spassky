@@ -4,7 +4,7 @@ Feature: Device Timeout
   I want to ignore devices that haven't connected recently
   
   Background: One passing test
-    Given a file named "passing.html" with:
+    Given a file named "timed-out.html" with:
       """
         <html>
           <head>
@@ -18,14 +18,13 @@ Feature: Device Timeout
         </html>
       """
       
-  @wip
   Scenario: One device times out
-    Given a connected mobile device
+    Given a connected mobile device "ipad"
     When the device disconnects
-    And I run "spassky <host> passing.html" with the server host
+    And I run "spassky <host> timed-out.html" with the server host
     Then the output should contain:
       """
-      1 test timed out on 1 device
+      TIMED OUT timed-out.html on ipad
       """
     And the exit status should be 2
     

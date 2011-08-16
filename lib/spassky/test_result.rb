@@ -23,6 +23,14 @@ module Spassky
       @device_statuses.count { |s| s.status == "timed out" }
     end
     
+    def completed_since(older_test_result)
+      if older_test_result.nil?
+        device_statuses.select { |s| s.completed? }
+      else
+        find_newly_completed_device_results(older_test_result)
+      end
+    end
+    
     def summary
       result = "?"
       count = @device_statuses.size
@@ -47,7 +55,8 @@ module Spassky
         :device_statuses => @device_statuses.map do |status|
           {
             :user_agent => status.user_agent,
-            :status => status.status
+            :status => status.status,
+            :test_name => status.test_name
           }
         end
       }.to_json
@@ -57,18 +66,45 @@ module Spassky
       parsed = JSON.parse(json)
       test_result = TestResult.new(
         parsed['device_statuses'].map do |t|
-          DeviceTestStatus.new(t["user_agent"], t["status"])
+          DeviceTestStatus.new(t["user_agent"], t["status"], t["test_name"])
         end
       )
+    end
+    
+    private
+    
+    def find_newly_completed_device_results(older_test_result)
+      completed = []
+      before_and_after(older_test_result) do |before, after|
+        if before.in_progress? && after.completed?
+          completed << after
+        end
+      end
+      completed
+    end
+    
+    def before_and_after(older_test_result)
+      device_statuses.each_with_index do |s, i|
+        yield older_test_result.device_statuses[i], s
+      end
     end
   end
   
   class DeviceTestStatus
-    attr_reader :user_agent, :status
+    attr_reader :user_agent, :status, :test_name
     
-    def initialize user_agent, status
+    def initialize(user_agent, status, test_name)
       @user_agent = user_agent
       @status = status
+      @test_name = test_name
+    end
+    
+    def in_progress?
+      @status == "in progress"
+    end
+    
+    def completed?
+      @status != "in progress"
     end
   end
 end

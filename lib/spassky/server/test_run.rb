@@ -34,7 +34,7 @@ module Spassky::Server
     
     def result
       Spassky::TestResult.new(@status_by_user_agent.map { |user_agent, status|
-        Spassky::DeviceTestStatus.new(user_agent, status)
+        Spassky::DeviceTestStatus.new(user_agent, status, name)
       })
     end
     

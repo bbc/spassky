@@ -1,11 +1,7 @@
 module Spassky::Server
   class HtmlTest
-    def initialize(original_html)
+    def initialize(original_html, url, seconds)
       @html = original_html
-      @meta_refresh_tag = ""
-    end
-    
-    def add_meta_refresh_tag(url, seconds)
       @meta_refresh_tag = "<meta http-equiv=\"refresh\" content=\"#{seconds}; url='#{url}'\">"
     end
     

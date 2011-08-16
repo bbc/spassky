@@ -53,9 +53,7 @@ module Spassky::Server
 
     get '/test_runs/:id/run/:random' do
       test_run = TestRun.find(params[:id])
-      html_test = HtmlTest.new(test_run.contents)
-      html_test.add_meta_refresh_tag("/device/idle/" + RandomStringGenerator.random_string, 1)
-      html_test.html
+      HtmlTest.new(test_run.contents, idle_url, 1).html
     end
     
     private
@@ -65,7 +63,7 @@ module Spassky::Server
     end
     
     def idle_url
-      "/device/idle/" + RandomStringGenerator.random_string
+      "/device/idle/#{RandomStringGenerator.random_string}"
     end
     
     def stay_in_meta_refresh_loop
