@@ -1,12 +1,6 @@
 require 'spassky/client/writer'
 
 module Spassky::Client
-  class FileBag
-    def read_files(pattern)
-      File.read(pattern)
-    end
-  end
-  
   class TestRunner
     def initialize(pusher, writer, directory_reader)
       @pusher = pusher
