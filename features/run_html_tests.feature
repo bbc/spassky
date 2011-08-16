@@ -1,8 +1,8 @@
 Feature: Run HTML Tests
   
   In order to inform design decisions
-  As a mobile tester
-  I want to collate test results from multiple devices
+  As a web developer
+  I want to test HTML code on different web browsers
 
   Background: Two tests, one passes, one fails
     Given a file named "passing.html" with:
