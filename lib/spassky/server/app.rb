@@ -23,7 +23,7 @@ module Spassky::Server
       test_run = TestRun.find_next_to_run_for_user_agent(request.user_agent)
       @device_list.update_last_connected(request.user_agent)
       if test_run
-        run_test(test_run)
+        redirect_to_run_tests(test_run)
       else
         idle_page
       end
@@ -58,7 +58,7 @@ module Spassky::Server
     
     private
     
-    def run_test(test_run)
+    def redirect_to_run_tests(test_run)
       redirect "/test_runs/#{test_run.id}/run/#{RandomStringGenerator.random_string}/#{test_run.name}"
     end
     

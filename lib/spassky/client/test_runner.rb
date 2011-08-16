@@ -1,15 +1,22 @@
 require 'spassky/client/writer'
 
 module Spassky::Client
+  class FileBag
+    def read_files(pattern)
+      File.read(pattern)
+    end
+  end
+  
   class TestRunner
-    def initialize(pusher, writer)
+    def initialize(pusher, writer, directory_reader)
       @pusher = pusher
       @writer = writer
+      @directory_reader = directory_reader
     end
 
-    def run_test(test_name)
+    def run_tests(pattern)
       previous_test_result = nil
-      @pusher.push(:name => test_name, :contents => File.read(test_name)) do |result|
+      @pusher.push(:name => pattern, :contents => @directory_reader.read_files(pattern)) do |result|
         handle_test_result(previous_test_result, result)
         previous_test_result = result
       end

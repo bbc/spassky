@@ -8,7 +8,7 @@ module Spassky::Client
     end
 
     let :runner do
-      mock(:runner, :run_test => true)
+      mock(:runner, :run_tests => true)
     end
 
     before do
@@ -23,7 +23,7 @@ module Spassky::Client
     end
 
     it "runs a single test with the name as the second argument" do
-      runner.should_receive(:run_test).with("test_name")
+      runner.should_receive(:run_tests).with("test_name")
       Cli::run(["server_name", "test_name"])
     end
 
