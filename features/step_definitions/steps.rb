@@ -24,6 +24,12 @@ Then /^it should wait for a test to run$/ do
   end
 end
 
+Then /^the word "Idle" should appear on the device$/ do
+  using_session(@last_user_agent) do
+    page.html.should include("Idle")
+  end
+end
+
 When /^the device disconnects$/ do
   using_session(@last_user_agent) do
     visit "/device/disconnect"

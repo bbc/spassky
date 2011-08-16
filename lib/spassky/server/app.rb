@@ -25,7 +25,7 @@ module Spassky::Server
       if test_run
         run_test(test_run)
       else
-        stay_in_meta_refresh_loop
+        idle_page
       end
     end
     
@@ -66,8 +66,10 @@ module Spassky::Server
       "/device/idle/#{RandomStringGenerator.random_string}"
     end
     
-    def stay_in_meta_refresh_loop
-      "<html><head><meta http-equiv=\"refresh\" content=\"1; url='#{idle_url}'\"></head></html>"
+    def idle_page
+      "<html><head><meta http-equiv=\"refresh\" content=\"1; url='#{idle_url}'\"></head>" +
+      "<body>Idle #{RandomStringGenerator.random_string}</body>" +
+      "</html>"
     end
   end
 end

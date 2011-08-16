@@ -6,3 +6,4 @@ Feature: Connection
   Scenario: Connect a device
     Given a connected mobile device "ipad"
     Then it should wait for a test to run
+    And the word "Idle" should appear on the device
