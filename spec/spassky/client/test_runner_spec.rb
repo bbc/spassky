@@ -53,7 +53,7 @@ module Spassky::Client
     end
 
     it "pushes the test" do
-      @test_pusher.should_receive(:push).with({:name => 'foo_test', :contents => { "test.html" => "contents" } })
+      @test_pusher.should_receive(:push).with({:name => 'foo_test', :contents => { "test.html" => "contents" }.to_json })
       @test_runner.run_tests("foo_test")
     end
 
