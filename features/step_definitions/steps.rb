@@ -9,6 +9,12 @@ Given /^a connected mobile device "([^"]*)"$/ do |user_agent|
   @last_user_agent = user_agent
 end
 
+Given /^a file named "([^"]*)" with ([^\s]*) in it$/ do |file_name, fixture_name|
+  fixture_path = File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "fixtures", fixture_name))
+  fixture_content = File.read(fixture_path)
+  write_file(file_name, fixture_content)
+end
+
 When /^I run "([^"]*)" with the server host$/ do |command_line|
   run_simple(unescape(command_line.gsub('<host>', "http://#{@uri.host}:#{@uri.port}")), false)
 end
