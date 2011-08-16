@@ -1,4 +1,4 @@
-Feature: Test Run
+Feature: Run HTML Tests
   
   In order to inform design decisions
   As a mobile tester
