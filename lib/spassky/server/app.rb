@@ -51,7 +51,7 @@ module Spassky::Server
       )
     end
 
-    get '/test_runs/:id/run/:random' do
+    get '/test_runs/:id/run/:random/:file_name' do
       test_run = TestRun.find(params[:id])
       HtmlTest.new(test_run.contents, idle_url, 1).html
     end
@@ -59,7 +59,7 @@ module Spassky::Server
     private
     
     def run_test(test_run)
-      redirect "/test_runs/#{test_run.id}/run/#{RandomStringGenerator.random_string}"
+      redirect "/test_runs/#{test_run.id}/run/#{RandomStringGenerator.random_string}/#{test_run.name}"
     end
     
     def idle_url

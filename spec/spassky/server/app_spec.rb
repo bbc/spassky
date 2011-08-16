@@ -5,6 +5,7 @@ require 'capybara/dsl'
 require 'rack/test'
 require 'json'
 
+ENV["RACK_ENV"] = "test"
 require 'spassky/server/app'
 
 module Spassky::Server
@@ -40,7 +41,7 @@ module Spassky::Server
         get "/device/idle/123"
       end
       
-      describe "when there are no tests to run on the connected device" do
+      context "when there are no tests to run on the connected device" do
         it "serves HTML page with a meta-refresh tag" do
           TestRun.stub!(:find_next_to_run_for_user_agent).and_return(nil)
           RandomStringGenerator.should_receive(:random_string).and_return("next-iteration")
@@ -49,16 +50,17 @@ module Spassky::Server
         end        
       end
       
-      describe "when there is a test to run on the connected device" do
-        it "redirects to /test_runs/:id/run/:random" do
+      context "when there is a test to run on the connected device" do
+        it "redirects to /test_runs/:id/run/:random/:test_name" do
           RandomStringGenerator.stub!(:random_string).and_return("a-random-string")
           test = mock(:test, :contents => "test contents")
           test.stub!(:id).and_return("the-test-id")
+          test.stub!(:name).and_return("the-test-name")
           TestRun.stub!(:find_next_to_run_for_user_agent).with("some user agent").and_return(test)          
           header "User-Agent", "some user agent"
           get '/device/idle/123'
           last_response.should be_redirect
-          last_response.location.should == 'http://example.org/test_runs/the-test-id/run/a-random-string'
+          last_response.location.should == 'http://example.org/test_runs/the-test-id/run/a-random-string/the-test-name'
         end
       end
     end
@@ -73,30 +75,30 @@ module Spassky::Server
       end
     end
     
-    describe "GET /test_runs/:id/run/:random" do
+    describe "GET /test_runs/:id/run/:random/:filename" do
       it "runs the test" do
-        test = mock(:test, :contents => "test contents")
+        test = mock(:test, :name => "test_name", :contents => "test contents")
         TestRun.stub!(:find).with('123').and_return(test)
         header "User-Agent", "some user agent"
-        get "/test_runs/123/run/random"
+        get "/test_runs/123/run/random/test_name"
         last_response.body.should include("test contents")
       end
       
       describe "when the test contents includes a </head> tag" do
         it "adds a meta-refresh tag to the test contents" do
-          test = mock(:test, :contents => "</head>")
+          test = mock(:test, :name => "test_name", :contents => "</head>")
           TestRun.stub!(:find).with('123').and_return(test)
           RandomStringGenerator.should_receive(:random_string).and_return("next-iteration")
-          get "/test_runs/123/run/random"
+          get "/test_runs/123/run/random/test_name"
           url = "/device/idle/next-iteration"
           last_response.body.should include("<meta http-equiv=\"refresh\" content=\"1; url='#{url}'\"></head>")
         end
         
         it "adds the assert.js script to the head" do
-          test = mock(:test, :contents => "</head>")
+          test = mock(:test, :name => "test_name", :contents => "</head>")
           TestRun.stub!(:find).with('123').and_return(test)
           File.should_receive(:read).and_return("assert.js!")
-          get "/test_runs/123/run/random"
+          get "/test_runs/123/run/random/test_name"
           last_response.body.should include("<script type=\"text/javascript\">assert.js!</script>")
         end
       end
