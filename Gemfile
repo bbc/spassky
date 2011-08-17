@@ -6,6 +6,7 @@ gem 'sinatra'
 gem 'rainbow'
 
 group :development do
+  gem 'rake'
   gem 'rspec'
   gem 'cucumber'
   gem 'capybara'
