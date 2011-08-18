@@ -8,7 +8,7 @@ module Spassky::Client
     end
 
     def get_connected_devices
-      JSON.parse(RestClient.get(@url))
+      JSON.parse(RestClient.get(@url + "/devices/list"))
     end
 
   end

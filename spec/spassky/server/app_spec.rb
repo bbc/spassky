@@ -32,6 +32,15 @@ module Spassky::Server
         last_response.location.should == "http://example.org/device/idle/random-string"
       end
     end
+    
+    describe "GET /devices/list" do
+      it "returns a list of devices" do
+        devices = ["iphone", "nokia"]
+        device_list.should_receive(:recently_connected_devices).and_return(devices)
+        get "/devices/list"
+        last_response.body.should == devices.to_json
+      end
+    end
 
     describe "GET /device/idle/123" do
 

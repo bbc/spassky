@@ -6,7 +6,7 @@ Feature: Device Connection
   Scenario: List One Connected Device
     Given a connected mobile device "The Device User Agent"
     And a connected mobile device "The Other Device User Agent"
-    When I run `spassky devices`
+    When I run "spassky <host> devices" with the server host
     Then the output should contain:
     """
     The Device User Agent

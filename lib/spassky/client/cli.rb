@@ -10,9 +10,10 @@ module Spassky::Client
         DeviceListRetriever.new(argv[0]).get_connected_devices.each do |device|
           puts device
         end
+      else
+        writer = argv.include?('--colour') ? ColouredWriter : DefaultWriter
+        TestRunner.new(Pusher.new(argv[0]), writer.new(STDOUT), DirectoryReader.new).run_tests(argv[1])
       end
-      writer = argv.include?('--colour') ? ColouredWriter : DefaultWriter
-      TestRunner.new(Pusher.new(argv[0]), writer.new(STDOUT), DirectoryReader.new).run_tests(argv[1])
     end
   end
 end
