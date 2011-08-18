@@ -1,14 +1,4 @@
-source :rubygems
+source "http://rubygems.org"
 
-gem 'rest-client'
-gem 'json'
-gem 'sinatra'
-gem 'rainbow'
-
-group :development do
-  gem 'rake'
-  gem 'rspec'
-  gem 'cucumber'
-  gem 'capybara'
-  gem 'aruba'
-end
+# Specify your gem's dependencies in akki.gemspec
+gemspec
