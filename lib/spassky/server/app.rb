@@ -15,6 +15,10 @@ module Spassky::Server
       @device_list.clear
     end
 
+    get "/devices/list" do
+      @device_list.recently_connected_devices.to_json
+    end
+
     get '/device/connect' do
       redirect idle_url
     end

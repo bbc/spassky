@@ -44,5 +44,31 @@ module Spassky::Client
         Cli::run(["server_name", "test_name", "--colour"])
       end
     end
+
+    context "with devices as the second argument" do
+      it "creates a new device list retriever with the passed in url" do
+        device_list_retriever = mock :device_list_retriever
+        device_list_retriever.stub!(:get_connected_devices).and_return([])
+        DeviceListRetriever.should_receive(:new).with("http://localhost:9000").and_return(device_list_retriever)
+        Cli::run(["http://localhost:9000", "devices"])
+      end
+
+      it "gets a list of devices" do
+        device_list_retriever = mock :device_list_retriever
+        device_list_retriever.should_receive(:get_connected_devices).and_return([])
+        DeviceListRetriever.stub!(:new).and_return(device_list_retriever)
+        Cli::run(["http://localhost:9000", "devices"])
+      end
+
+      it "outputs a list of devices" do
+        device_list_retriever = mock :device_list_retriever
+        device_list_retriever.stub!(:get_connected_devices).and_return(["iphone", "ipad", "nokia"])
+        DeviceListRetriever.stub!(:new).and_return(device_list_retriever)
+        Cli.should_receive(:puts).with("iphone")
+        Cli.should_receive(:puts).with("ipad")
+        Cli.should_receive(:puts).with("nokia")
+        Cli::run(["http://localhost:9000", "devices"])
+      end
+    end
   end
 end
