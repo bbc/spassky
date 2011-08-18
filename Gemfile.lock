@@ -37,6 +37,7 @@ GEM
     rack-test (0.6.0)
       rack (>= 1.0)
     rainbow (1.1.1)
+    rake (0.9.2)
     rdiscount (1.6.8)
     rest-client (1.6.1)
       mime-types (>= 1.16)
@@ -71,6 +72,7 @@ DEPENDENCIES
   cucumber
   json
   rainbow
+  rake
   rest-client
   rspec
   sinatra

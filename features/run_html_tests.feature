@@ -1,8 +1,8 @@
-Feature: Test Run
-  
+Feature: Run HTML Tests
+
   In order to inform design decisions
-  As a mobile tester
-  I want to collate test results from multiple devices
+  As a web developer
+  I want to test HTML code on different web browsers
 
   Background: Two tests, one passes, one fails
     Given a file named "passing.html" with:
@@ -34,7 +34,7 @@ Feature: Test Run
 
   Scenario: One passing test on one device
     Given a connected mobile device "blackberry"
-    When I run "spassky <host> passing.html" with the server host 
+    When I run "spassky <host> passing.html" with the server host
     Then the output should contain:
       """
       PASS passing.html on blackberry
@@ -44,7 +44,7 @@ Feature: Test Run
   Scenario: One passing test on two devices
     Given a connected mobile device "blackberry"
     And a connected mobile device "iphone"
-    When I run "spassky <host> passing.html" with the server host 
+    When I run "spassky <host> passing.html" with the server host
     Then the output should contain:
       """
       PASS passing.html on blackberry
