@@ -10,11 +10,11 @@ module Spassky::Server
       @device_list = device_list
       super()
     end
-    
+
     get "/devices/clear" do
       @device_list.clear
     end
-    
+
     get '/device/connect' do
       redirect idle_url
     end
@@ -28,11 +28,11 @@ module Spassky::Server
         idle_page
       end
     end
-    
+
     post '/test_runs' do
       run = TestRun.create({
         :name => params[:name],
-        :contents => params[:contents],
+        :contents => JSON.parse(params[:contents]),
         :devices => @device_list.recently_connected_devices
       })
       redirect "/test_runs/#{run.id}"
@@ -53,19 +53,20 @@ module Spassky::Server
 
     get '/test_runs/:id/run/:random/:file_name' do
       test_run = TestRun.find(params[:id])
-      HtmlTest.new(test_run.contents, idle_url, 1).html
+      test_name = params[:file_name]
+      HtmlTest.new(test_run.contents, idle_url, 1).get_file(test_name)
     end
-    
+
     private
-    
+
     def redirect_to_run_tests(test_run)
       redirect "/test_runs/#{test_run.id}/run/#{RandomStringGenerator.random_string}/#{test_run.name}"
     end
-    
+
     def idle_url
       "/device/idle/#{RandomStringGenerator.random_string}"
     end
-    
+
     def idle_page
       "<html><head><meta http-equiv=\"refresh\" content=\"1; url='#{idle_url}'\"></head>" +
       "<body>Idle #{RandomStringGenerator.random_string}</body>" +

@@ -1,12 +1,22 @@
 Feature: Run QUnit Tests
-  
+
   In order to inform design decisions
   As a QUnit user
   I want to test JavaScript code on different web browsers
-  
+
   Background: Two tests, one passes, one fails
     Given a file named "qunit_suite/passing.js" with:
       """
+      QUnit.done = function(failed, passed, total, runtime){
+      assert(true, "pass");
+
+        if (failed.length() > 0) {
+          assert(false, "qunit failed");
+        } else {
+          assert(true, "qunit passed");
+        }
+      };
+
       test("should pass", function() {
         ok(true, "it passed!");
       });
@@ -24,13 +34,13 @@ Feature: Run QUnit Tests
         </body>
       </html>
       """
-  
+
   @wip
   Scenario: One passing suite on one device
     Given a connected mobile device "blackberry"
-    When I run "spassky <host> qunit_suite" with the server host 
+    When I run "spassky <host> qunit_suite" with the server host
     Then the output should contain:
       """
-      PASS passing.js on blackberry
+      PASS qunit_suite on blackberry
       """
     And the exit status should be 0

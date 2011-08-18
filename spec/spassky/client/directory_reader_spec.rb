@@ -18,7 +18,7 @@ module Spassky::Client
         Dir.should_receive(:glob).with("directory/*").and_return([])
         DirectoryReader.new.read_files("directory")
       end
-      
+
       it "returns a hash with all files in that directory" do
         File.stub!(:file?).and_return(false)
         File.stub!(:directory?).and_return(true)

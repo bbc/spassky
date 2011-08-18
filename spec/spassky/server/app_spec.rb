@@ -11,19 +11,19 @@ require 'spassky/server/app'
 module Spassky::Server
   describe App do
     include Rack::Test::Methods
-    
+
     before do
       RandomStringGenerator.stub!(:random_string).and_return("random-string")
     end
-    
+
     def app
       App.new(device_list)
     end
-    
+
     let :device_list do
       mock(:device_list, :update_last_connected => true, :recently_connected_devices => [])
     end
-    
+
     describe "GET /device/connect" do
       it "redirects to a unique URL" do
         RandomStringGenerator.should_receive(:random_string).and_return("random-string")
@@ -32,31 +32,31 @@ module Spassky::Server
         last_response.location.should == "http://example.org/device/idle/random-string"
       end
     end
-    
+
     describe "GET /device/idle/123" do
-      
+
       it "tells the device list that the device connected" do
         device_list.should_receive(:update_last_connected).with("some user agent")
         header "User-Agent", "some user agent"
         get "/device/idle/123"
       end
-      
+
       context "when there are no tests to run on the connected device" do
         it "serves HTML page with a meta-refresh tag" do
           TestRun.stub!(:find_next_to_run_for_user_agent).and_return(nil)
           RandomStringGenerator.should_receive(:random_string).and_return("next-iteration")
           get "/device/idle/123"
           last_response.body.should include("<meta http-equiv=\"refresh\" content=\"1; url='/device/idle/next-iteration'\">")
-        end        
+        end
       end
-      
+
       context "when there is a test to run on the connected device" do
-        it "redirects to /test_runs/:id/run/:random/:test_name" do
+        it "redirects to /test_runs/:id/run/:random/test_name" do
           RandomStringGenerator.stub!(:random_string).and_return("a-random-string")
           test = mock(:test, :contents => "test contents")
           test.stub!(:id).and_return("the-test-id")
           test.stub!(:name).and_return("the-test-name")
-          TestRun.stub!(:find_next_to_run_for_user_agent).with("some user agent").and_return(test)          
+          TestRun.stub!(:find_next_to_run_for_user_agent).with("some user agent").and_return(test)
           header "User-Agent", "some user agent"
           get '/device/idle/123'
           last_response.should be_redirect
@@ -64,7 +64,7 @@ module Spassky::Server
         end
       end
     end
-    
+
     describe "GET /test_runs/:id/run/:random/assert" do
       it "saves the test result" do
         test = mock(:test)
@@ -74,36 +74,58 @@ module Spassky::Server
         get "/test_runs/123/run/random/assert?status=pass"
       end
     end
-    
-    describe "GET /test_runs/:id/run/:random/:filename" do
-      it "runs the test" do
-        test = mock(:test, :name => "test_name", :contents => "test contents")
-        TestRun.stub!(:find).with('123').and_return(test)
-        header "User-Agent", "some user agent"
-        get "/test_runs/123/run/random/test_name"
-        last_response.body.should include("test contents")
+
+    describe "GET /test_runs/:id/run/:random/filename" do
+      before do
+        @test_contents = {
+          "test_file.js"        => "some javascript",
+          "fake_test.html.file" => "don't choose this one",
+          "test_name.html"      => "actual test!"
+        }
       end
-      
-      describe "when the test contents includes a </head> tag" do
-        it "adds a meta-refresh tag to the test contents" do
-          test = mock(:test, :name => "test_name", :contents => "</head>")
+
+      context "file name is a file" do
+        it "returns the specified file" do
+          test = mock(:test, :name => "fake_test.html.file", :contents => @test_contents)
           TestRun.stub!(:find).with('123').and_return(test)
-          RandomStringGenerator.should_receive(:random_string).and_return("next-iteration")
-          get "/test_runs/123/run/random/test_name"
+          header "User-Agent", "some user agent"
+          get "/test_runs/123/run/random/fake_test.html.file"
+          last_response.body.should include("don't choose this one")
+        end
+      end
+
+      context "file name is not a file" do
+        it "returns the first file that ends with .html" do
+          test = mock(:test, :name => "directory/test_name.html", :contents => @test_contents)
+          TestRun.stub!(:find).with('123').and_return(test)
+          header "User-Agent", "some user agent"
+          get "/test_runs/123/run/random/not_a_file"
+          last_response.body.should include("actual test!")
+        end
+      end
+
+      describe "when the test contents includes a </head> tag" do
+        before do
+          @test_contents["test_name.html"] = "</head>"
+          @test = mock(:test, :name => "test_name", :contents => @test_contents)
+          TestRun.stub!(:find).with('123').and_return(@test)
+        end
+
+        it "adds a meta-refresh tag to the test contents" do
+          RandomStringGenerator.stub!(:random_string).and_return("next-iteration")
+          get "/test_runs/123/run/random/test_name.html"
           url = "/device/idle/next-iteration"
           last_response.body.should include("<meta http-equiv=\"refresh\" content=\"1; url='#{url}'\"></head>")
         end
-        
+
         it "adds the assert.js script to the head" do
-          test = mock(:test, :name => "test_name", :contents => "</head>")
-          TestRun.stub!(:find).with('123').and_return(test)
-          File.should_receive(:read).and_return("assert.js!")
-          get "/test_runs/123/run/random/test_name"
+          File.stub!(:read).and_return("assert.js!")
+          get "/test_runs/123/run/random/test_name.html"
           last_response.body.should include("<script type=\"text/javascript\">assert.js!</script>")
         end
       end
     end
-    
+
     describe "POST /test_runs" do
       before do
         device_list.stub!(:recently_connected_devices).and_return(["foo", "bar"])
@@ -111,20 +133,21 @@ module Spassky::Server
         @test_run.stub!(:id).and_return(42)
         TestRun.stub!(:create).and_return(@test_run)
         RandomStringGenerator.stub!(:random_string).and_return("number")
+        @test_contents = {"file1" => "file1 contents", "file2" => "file2 contents"}
       end
-      
+
       it "creates a test run" do
-        TestRun.should_receive(:create).with(:name => "first-test", :contents => "test-contents", :devices => ["foo", "bar"])
-        post "/test_runs", { :name => "first-test", :contents => "test-contents" }
+        TestRun.should_receive(:create).with(:name => "first-test", :contents => @test_contents, :devices => ["foo", "bar"])
+        post "/test_runs", { :name => "first-test", :contents => @test_contents.to_json }
       end
-      
+
       it "redirects to the status page" do
-        post "/test_runs", { :name => "first-test", :contents => "test-contents"}
+        post "/test_runs", { :name => "first-test", :contents => @test_contents.to_json}
         last_response.should be_redirect
         last_response.location.should =~ /test_runs\/42$/
       end
     end
-    
+
     describe "GET /test_runs/123" do
       it "returns the status of the test with the id '123'" do
         test_run = mock(:test_run)
@@ -149,6 +172,6 @@ module Spassky::Server
         get '/test_runs/123'
       end
     end
-    
+
   end
 end
