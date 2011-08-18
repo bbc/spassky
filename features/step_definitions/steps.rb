@@ -57,10 +57,9 @@ Then /^I should see the output:$/ do |string|
   while text == ""
     @output.rewind
     text = @output.read
-    break if sleep_count = 10
+    break if sleep_count = 20
     sleep 0.5
     sleep_count += 1
   end
-
   text.should include string
 end
