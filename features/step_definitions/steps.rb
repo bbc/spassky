@@ -41,3 +41,26 @@ When /^the device disconnects$/ do
     visit "/device/disconnect"
   end
 end
+
+Given /^I run spassky\-server and then exit it$/ do
+  @output = Tempfile.new("output")
+  process = ChildProcess.build('./bin/spassky-server')
+  process.io.stdout = @output
+  process.start
+  sleep 1
+  process.stop
+end
+
+Then /^I should see the output:$/ do |string|
+  text = ""
+  sleep_count = 0
+  while text == ""
+    @output.rewind
+    text = @output.read
+    break if sleep_count = 10
+    sleep 0.5
+    sleep_count += 1
+  end
+
+  text.should include string
+end

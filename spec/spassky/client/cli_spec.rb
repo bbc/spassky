@@ -35,7 +35,7 @@ module Spassky::Client
         Cli::run(["server_name", "test_name"])
       end
     end
-    
+
     context "with colour output option" do
       it "creates a test runner with a colour writer" do
         coloured_writer = mock :coloured_writer

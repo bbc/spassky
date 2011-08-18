@@ -3,6 +3,7 @@ $:.unshift(File.dirname(__FILE__) + '/../lib') unless $:.include?(File.dirname(_
 
 require 'rubygems'
 require 'spassky'
-require 'spassky/client/cli'
+require 'spassky/server/app'
 
-Spassky::Client::Cli.run(ARGV)
+Spassky::Server::App.set :port, 9191
+Spassky::Server::App.run!
