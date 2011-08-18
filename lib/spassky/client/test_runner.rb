@@ -10,7 +10,8 @@ module Spassky::Client
 
     def run_tests(pattern)
       previous_test_result = nil
-      @pusher.push(:name => pattern, :contents => @directory_reader.read_files(pattern).to_json) do |result|
+      test_name = File.basename(pattern)
+      @pusher.push(:name => test_name, :contents => @directory_reader.read_files(pattern).to_json) do |result|
         handle_test_result(previous_test_result, result)
         previous_test_result = result
       end

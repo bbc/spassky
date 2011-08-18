@@ -52,9 +52,9 @@ module Spassky::Client
       @test_runner.run_tests("foo_test")
     end
 
-    it "pushes the test" do
+    it "gets the test name from the base name of the pattern and pushes the test" do
       @test_pusher.should_receive(:push).with({:name => 'foo_test', :contents => { "test.html" => "contents" }.to_json })
-      @test_runner.run_tests("foo_test")
+      @test_runner.run_tests("path/to/foo_test")
     end
 
     context "timeout" do
