@@ -1,6 +1,38 @@
 # Spassky #
 A distributed web testing tool. We use it at the BBC for testing our web apps on a wide range of mobile devices.
 
+# Installation #
+
+```
+gem install spassky
+```
+
+# Usage #
+
+Start the server:
+
+```
+spassky-server
+```
+
+Run a test:
+
+```
+spassky http://localhost:9191 html_test.html
+```
+
+Run a test with colour:
+
+```
+spassky http://localhost:9191 html_test.html --colour
+```
+
+Run a directory that contains a test (the first .html file will be used as the test)
+
+```
+spassky http://localhost:9191 test_directory
+```
+
 ## Why? ##
 We need to run automated tests on a wide range of web-enabled devices with very mixed capabilities. Some of them have JavaScript, but in many cases it's not standard and buggy. That means web testing tools targeted at desktop browsers don't tend to work very well, if at all. Spassky uses legacy techniques and as little client-side JavaScript as possible to ensure we can run tests on as many devices as possible.
 
