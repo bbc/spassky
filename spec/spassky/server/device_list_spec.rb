@@ -9,7 +9,7 @@ module Spassky::Server
       list.update_last_connected("bar")
       list.recently_connected_devices.should == ["foo", "bar"]
     end
-    
+
     it "clears all devices" do
       list = DeviceList.new
       list.update_last_connected("foo")
@@ -17,7 +17,7 @@ module Spassky::Server
       list.clear
       list.recently_connected_devices.size.should == 0
     end
-    
+
     it "ignores devices connected more than 3 seconds ago" do
       list = DeviceList.new
       now = Time.now

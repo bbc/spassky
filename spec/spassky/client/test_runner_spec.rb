@@ -14,36 +14,28 @@ module Spassky::Client
       @test_runner = TestRunner.new(@test_pusher, @writer, @directory_reader)
     end
 
-    def new_in_progress_test_result
-      test_result = mock :in_progress_test_result
-      test_result.stub!(:status).and_return "in progress"
-      test_result.stub!(:summary).and_return "in progress summary"
+    def new_test_result status, summary
+      test_result = mock :"#{status.gsub(" ", "_")}_test_result"
+      test_result.stub!(:status).and_return status
+      test_result.stub!(:summary).and_return summary
       test_result.stub!(:completed_since).and_return([])
       test_result
+    end
+
+    def new_in_progress_test_result
+      new_test_result "in progress", "in progress summary"
     end
 
     def new_passed_test_result
-      test_result = mock :passed_test_result
-      test_result.stub!(:status).and_return "pass"
-      test_result.stub!(:summary).and_return "pass summary"
-      test_result.stub!(:completed_since).and_return([])
-      test_result
+      new_test_result "pass", "pass summary"
     end
 
     def new_failed_test_result
-      test_result = mock :failed_test_result
-      test_result.stub!(:status).and_return "fail"
-      test_result.stub!(:summary).and_return "fail summary"
-      test_result.stub!(:completed_since).and_return([])
-      test_result
+      new_test_result "fail", "fail summary"
     end
 
     def new_timeout_test_result
-      test_result = mock :timeout_test_result
-      test_result.stub!(:status).and_return "timed out"
-      test_result.stub!(:summary).and_return "timed out summary"
-      test_result.stub!(:completed_since).and_return([])
-      test_result
+      new_test_result "timed out", "timed out summary"
     end
 
     it "reads a test" do
