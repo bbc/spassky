@@ -3,6 +3,7 @@ require 'spassky/server/random_string_generator'
 require 'spassky/server/test_run'
 require 'spassky/server/device_list'
 require 'spassky/server/html_test'
+require 'spassky/server/device_database'
 
 module Spassky::Server
   class App < Sinatra::Base
@@ -23,9 +24,27 @@ module Spassky::Server
       redirect idle_url
     end
 
+    def get_device_identifier user_agent
+      device = get_device user_agent
+      if device
+        device.model_name
+      else
+        user_agent
+      end
+    end
+
+    def get_device user_agent
+      begin
+        SingletonDeviceDatabase.instance.device(user_agent)
+      rescue DeviceNotFoundError
+      end
+    end
+
     get '/device/idle/:random' do
-      test_run = TestRun.find_next_to_run_for_user_agent(request.user_agent)
-      @device_list.update_last_connected(request.user_agent)
+      device_identifier = get_device_identifier(request.user_agent)
+
+      test_run = TestRun.find_next_to_run_for_user_agent(device_identifier)
+      @device_list.update_last_connected(device_identifier)
       if test_run
         redirect_to_run_tests(test_run)
       else

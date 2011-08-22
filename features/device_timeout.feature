@@ -2,7 +2,7 @@ Feature: Device Timeout
   In order for a clean test run
   As a Developer-in-Test
   I want to ignore devices that haven't connected recently
-  
+
   Background: One passing test
     Given a file named "timed-out.html" with:
       """
@@ -17,7 +17,7 @@ Feature: Device Timeout
           </body>
         </html>
       """
-      
+
   Scenario: One device times out
     Given a connected mobile device "ipad"
     When the device disconnects
@@ -27,5 +27,5 @@ Feature: Device Timeout
       TIMED OUT timed-out.html on ipad
       """
     And the exit status should be 2
-    
-    
+
+

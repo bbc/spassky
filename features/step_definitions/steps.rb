@@ -15,6 +15,9 @@ Given /^a file named "([^"]*)" with ([^\s]*) in it$/ do |file_name, fixture_name
   write_file(file_name, fixture_content)
 end
 
+Given /^a Wireless Universal Resource FiLe$/ do
+end
+
 When /^I run "([^"]*)" with the server host$/ do |command_line|
   run_simple(unescape(command_line.gsub('<host>', "http://#{@uri.host}:#{@uri.port}")), false)
 end
@@ -42,24 +45,12 @@ When /^the device disconnects$/ do
   end
 end
 
-Given /^I run spassky\-server and then exit it$/ do
-  @output = Tempfile.new("output")
-  process = ChildProcess.build('./bin/spassky-server')
-  process.io.stdout = @output
-  process.start
-  sleep 1
-  process.stop
+Given /^I run spassky\-server$/ do
+  @spassky_server_process = ChildProcess.build('./bin/spassky-server')
+  @spassky_server_process.start
 end
 
-Then /^I should see the output:$/ do |string|
-  text = ""
-  sleep_count = 0
-  while text == ""
-    @output.rewind
-    text = @output.read
-    break if sleep_count = 20
-    sleep 0.5
-    sleep_count += 1
-  end
-  text.should include string
+Then /^it should not crash$/ do
+  @spassky_server_process.should_not be_crashed
+  @spassky_server_process.stop
 end
