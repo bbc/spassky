@@ -10,7 +10,12 @@ Feature: List Connected Devices
     When I run "spassky <host> devices" with the server host
     Then the output should contain:
     """
-    iPhone
-    iPad
+    iPhone (id = apple_iphone_ver1_suba543, mobile_browser = Safari, device_os_version = 1.0)
+    iPad (id = apple_ipad_ver1_sub5312110, mobile_browser = Safari, device_os_version = 3.2)
     """
 
+#:id => "apple_iphone_ver1_suba543",
+#:mobile_browser => "Safari",
+#:pointing_method => "touchscreen",
+#:model_name => "iPhone",
+#:device_os_version => "1.0",

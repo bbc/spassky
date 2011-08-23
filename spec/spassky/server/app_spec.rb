@@ -44,26 +44,14 @@ module Spassky::Server
 
     describe "GET /device/idle/123" do
       before do
-        device = mock :device
-        device.stub!(:model_name).and_return "the model name"
         @device_database = mock :device_database
-        @device_database.stub!(:device).and_return device
         SingletonDeviceDatabase.stub!(:instance).and_return(@device_database)
+        @device_database.stub!(:device_identifier).and_return("anything")
       end
 
-      context "device does not exist in device info database" do
-        it "tells the device list that the device connected using the user agent" do
-          @device_database.stub!(:device).and_raise DeviceNotFoundError
-          device_list.should_receive(:update_last_connected).with("some user agent")
-          get "/device/idle/123"
-        end
-      end
-
-      context "device exists in device info database" do
-        it "tells the device list that the device connected using the model name" do
-          device_list.should_receive(:update_last_connected).with("the model name")
-          get "/device/idle/123"
-        end
+      it "tells the device list that the device connected using the device identifier" do
+        device_list.should_receive(:update_last_connected).with("anything")
+        get "/device/idle/123"
       end
 
       context "when there are no tests to run on the connected device" do
@@ -81,7 +69,7 @@ module Spassky::Server
           test = mock(:test, :contents => "test contents")
           test.stub!(:id).and_return("the-test-id")
           test.stub!(:name).and_return("the-test-name")
-          TestRun.stub!(:find_next_to_run_for_user_agent).with("the model name").and_return(test)
+          TestRun.stub!(:find_next_to_run_for_user_agent).with("anything").and_return(test)
           get '/device/idle/123'
           last_response.should be_redirect
           last_response.location.should == 'http://example.org/test_runs/the-test-id/run/a-random-string/the-test-name'

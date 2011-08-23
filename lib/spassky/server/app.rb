@@ -25,19 +25,7 @@ module Spassky::Server
     end
 
     def get_device_identifier user_agent
-      device = get_device user_agent
-      if device
-        device.model_name
-      else
-        user_agent
-      end
-    end
-
-    def get_device user_agent
-      begin
-        SingletonDeviceDatabase.instance.device(user_agent)
-      rescue DeviceNotFoundError
-      end
+      SingletonDeviceDatabase.instance.device_identifier(user_agent)
     end
 
     get '/device/idle/:random' do
