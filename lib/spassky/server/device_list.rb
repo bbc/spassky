@@ -1,8 +1,11 @@
 module Spassky::Server
   class DeviceList
+    def initialize
+      @devices_and_time_last_connected = {}
+    end
+
     def update_last_connected user_agent
-      @devices_and_time_last_connected ||= {}
-      @devices_and_time_last_connected[user_agent] = Time.now  
+      @devices_and_time_last_connected[user_agent] = Time.now
     end
 
     def recently_connected_devices
