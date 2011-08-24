@@ -145,6 +145,27 @@ module Spassky::Server
         @test_contents = {"file1" => "file1 contents", "file2" => "file2 contents"}
       end
 
+      context "no devices connected" do
+        before do
+          device_list.stub!(:recently_connected_devices).and_return([])
+        end
+
+        it "does not create a test run" do
+          TestRun.should_not_receive(:create)
+          post "/test_runs", { :name => "first-test", :contents => @test_contents.to_json }
+        end
+
+        it "halts with a 500" do
+          post "/test_runs", { :name => "first-test", :contents => @test_contents.to_json }
+          last_response.status.should == 500
+        end
+
+        it "displays the error" do
+          post "/test_runs", { :name => "first-test", :contents => @test_contents.to_json }
+          last_response.body.should == "There are no connected devices"
+        end
+      end
+
       it "creates a test run" do
         TestRun.should_receive(:create).with(:name => "first-test", :contents => @test_contents, :devices => ["foo", "bar"])
         post "/test_runs", { :name => "first-test", :contents => @test_contents.to_json }

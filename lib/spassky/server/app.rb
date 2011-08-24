@@ -41,12 +41,17 @@ module Spassky::Server
     end
 
     post '/test_runs' do
-      run = TestRun.create({
-        :name => params[:name],
-        :contents => JSON.parse(params[:contents]),
-        :devices => @device_list.recently_connected_devices
-      })
-      redirect "/test_runs/#{run.id}"
+      recently_connected_devices = @device_list.recently_connected_devices
+      if recently_connected_devices.size > 0
+        run = TestRun.create({
+          :name => params[:name],
+          :contents => JSON.parse(params[:contents]),
+          :devices => @device_list.recently_connected_devices
+        })
+        redirect "/test_runs/#{run.id}"
+      else
+        halt 500, "There are no connected devices"
+      end
     end
 
     get '/test_runs/:id' do

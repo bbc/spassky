@@ -43,6 +43,16 @@ module Spassky::Client
       }.should raise_error("Expected http://foo/test_runs to respond with 302")
     end
 
+    it "raises the error when the response is a 500" do
+      @response = mock("this is the error", :code => 500, :headers => { }, :to_str => "this is the error")
+      RestClient.stub!(:post).with("http://foo/test_runs", "test contents"
+        ).and_yield(@response, nil, nil)
+      lambda {
+        @pusher.push("test contents") do |result|
+        end
+      }.should raise_error("this is the error")
+    end
+
     it "polls the URL returned until the test passes" do
       RestClient.should_receive(:get).with("http://poll/me").and_return(in_progress_status, in_progress_status, in_progress_status, passed_status)
       @pusher.push("test contents") do |result|

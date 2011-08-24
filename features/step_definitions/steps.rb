@@ -9,6 +9,10 @@ Given /^a connected mobile device "([^"]*)"$/ do |user_agent|
   @last_user_agent = user_agent
 end
 
+Given /^I have no connected devices$/ do
+  @uri = URI.parse(current_url)
+end
+
 Given /^a file named "([^"]*)" with ([^\s]*) in it$/ do |file_name, fixture_name|
   fixture_path = File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "fixtures", fixture_name))
   fixture_content = File.read(fixture_path)

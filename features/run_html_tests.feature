@@ -32,6 +32,15 @@ Feature: Run HTML Tests
         </html>
       """
 
+  Scenario: No connected devices
+    Given I have no connected devices
+    When I run "spassky <host> passing.html" with the server host
+    Then the output should contain:
+      """
+      There are no connected devices
+      """
+    And the exit status should be 1
+
   Scenario: One passing test on one device
     Given a connected mobile device "blackberry"
     When I run "spassky <host> passing.html" with the server host

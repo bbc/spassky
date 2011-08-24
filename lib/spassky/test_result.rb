@@ -6,7 +6,7 @@ module Spassky
     def initialize device_statuses
       @device_statuses = device_statuses
     end
-    
+
     def status
       statuses = @device_statuses.map { |s| s.status }.uniq
       return "in progress" if statuses.include?("in progress") || statuses.size == 0
@@ -14,15 +14,15 @@ module Spassky
       return "timed out" if statuses.include?("timed out")
       "pass"
     end
-    
+
     def count_fails
       @device_statuses.count { |s| s.status == "fail" }
     end
-    
+
     def count_timeouts
       @device_statuses.count { |s| s.status == "timed out" }
     end
-    
+
     def completed_since(older_test_result)
       if older_test_result.nil?
         device_statuses.select { |s| s.completed? }
@@ -30,7 +30,7 @@ module Spassky
         find_newly_completed_device_results(older_test_result)
       end
     end
-    
+
     def summary
       result = "?"
       count = @device_statuses.size
@@ -48,7 +48,7 @@ module Spassky
       result << "s" if @device_statuses.size > 1
       return result
     end
-    
+
     def to_json
       {
         :status => "pass",
@@ -61,7 +61,7 @@ module Spassky
         end
       }.to_json
     end
-    
+
     def self.from_json json
       parsed = JSON.parse(json)
       test_result = TestResult.new(
@@ -70,9 +70,9 @@ module Spassky
         end
       )
     end
-    
+
     private
-    
+
     def find_newly_completed_device_results(older_test_result)
       completed = []
       before_and_after(older_test_result) do |before, after|
@@ -82,27 +82,27 @@ module Spassky
       end
       completed
     end
-    
+
     def before_and_after(older_test_result)
       device_statuses.each_with_index do |s, i|
         yield older_test_result.device_statuses[i], s
       end
     end
   end
-  
+
   class DeviceTestStatus
     attr_reader :user_agent, :status, :test_name
-    
+
     def initialize(user_agent, status, test_name)
       @user_agent = user_agent
       @status = status
       @test_name = test_name
     end
-    
+
     def in_progress?
       @status == "in progress"
     end
-    
+
     def completed?
       @status != "in progress"
     end
