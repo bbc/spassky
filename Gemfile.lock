@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    spassky (0.1.0)
+    spassky (0.1.2)
       json
       rainbow
       rest-client

@@ -4,7 +4,7 @@ require "singleton"
 
 module Spassky::Server
   LATEST = 'http://downloads.sourceforge.net/project/wurfl/WURFL/latest/wurfl-latest.xml.gz'
-  WURFL_FILE = "wurfl/wurfl-latest.xml.gz"
+  WURFL_FILE = File.join(File.dirname(__FILE__), "..", "..", "..", "wurfl/wurfl-latest.xml.gz")
 
   class DeviceNotFoundError < StandardError
   end

@@ -18,7 +18,7 @@ module Spassky::Server
     context ".new" do
       it "loads up the wurfl database" do
         wurfl = mock(:wurfl).as_null_object
-        WURFL.should_receive(:new).with("wurfl/wurfl-latest.xml.gz").and_return(wurfl)
+        WURFL.should_receive(:new).with(Spassky::Server::WURFL_FILE).and_return(wurfl)
         DeviceDatabase.new
       end
 
