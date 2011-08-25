@@ -5,5 +5,10 @@ require 'rubygems'
 require 'spassky'
 require 'spassky/server/app'
 
-Spassky::Server::App.set :port, 9191
+if ARGV[0] == "--port" || ARGV[0] == "-p"
+  PORT = ARGV[1]
+end
+PORT ||= 9191
+
+Spassky::Server::App.set :port, PORT
 Spassky::Server::App.run!
