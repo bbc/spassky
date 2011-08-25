@@ -1,10 +1,12 @@
 require "restclient"
 require "wurfl-lite"
 require "singleton"
+require "fileutils"
 
 module Spassky::Server
   LATEST = 'http://downloads.sourceforge.net/project/wurfl/WURFL/latest/wurfl-latest.xml.gz'
-  WURFL_FILE = File.join(File.dirname(__FILE__), "..", "..", "..", "wurfl/wurfl-latest.xml.gz")
+  WURFL_DIRECTORY = File.join(File.dirname(__FILE__), "..", "..", "..", "wurfl")
+  WURFL_FILE = File.join(WURFL_DIRECTORY, "wurfl-latest.xml.gz")
 
   class DeviceNotFoundError < StandardError
   end
@@ -16,6 +18,7 @@ module Spassky::Server
     end
 
     def download_wurfl_file
+      FileUtils.mkdir_p(WURFL_DIRECTORY)
       Kernel.puts("Downloading WURFL database")
       content = RestClient.get(LATEST)
       File.open(WURFL_FILE, "w") do |file|
