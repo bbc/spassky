@@ -15,6 +15,11 @@ Start the server:
 spassky-server
 ```
 
+Connect some devices by browsing to http://localhost:9191/device/connect on the device. The device will stay in an idle meta refresh loop until it receives a test to run.
+
+Check what devices are connected to the server:
+spassky http://localhost:9191 devices
+
 Run a test:
 
 ```
@@ -41,7 +46,5 @@ Physical devices act as test agents, connected permanently to a central server u
 
 ## Some features that would be nice to have ##
 - Conveniently run QUnit / Jasmine / other tests
-- Aliases for user agents
 - Run tests on a subset of agents
-- List disconnected devices
 - Assertions on network activity (e.g. for caching tests)
