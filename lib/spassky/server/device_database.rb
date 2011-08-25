@@ -1,3 +1,4 @@
+require "restclient"
 require "wurfl-lite"
 require "singleton"
 
