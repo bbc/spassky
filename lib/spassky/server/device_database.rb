@@ -20,6 +20,7 @@ module Spassky::Server
     def download_wurfl_file
       FileUtils.mkdir_p(WURFL_DIRECTORY)
       Kernel.puts("Downloading WURFL database")
+      RestClient.proxy = ENV["http_proxy"] if ENV["http_proxy"]
       content = RestClient.get(LATEST)
       File.open(WURFL_FILE, "w") do |file|
         file.write(content)
