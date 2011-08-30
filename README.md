@@ -1,6 +1,9 @@
 # Spassky #
 A distributed web testing tool. We use it at the BBC for testing our web apps on a wide range of mobile devices.
 
+
+![Spassky](spassky.jpg)
+
 # Installation #
 
 ```
