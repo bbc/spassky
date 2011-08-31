@@ -9,6 +9,18 @@ Given /^a connected mobile device "([^"]*)"$/ do |user_agent|
   @last_user_agent = user_agent
 end
 
+Given /^I have two connected devices$/ do
+  1.upto(2) do |device_number|
+    user_agent = "device#{device_number}"
+    register_driver_with_user_agent user_agent
+    using_session(user_agent) do
+      visit '/device/connect'
+      @uri = URI.parse(current_url)
+    end
+    @last_user_agent = user_agent
+  end
+end
+
 Given /^I have no connected devices$/ do
   @uri = URI.parse(current_url)
 end
