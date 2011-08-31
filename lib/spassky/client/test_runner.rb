@@ -11,9 +11,14 @@ module Spassky::Client
     def run_tests(pattern)
       previous_test_result = nil
       test_name = File.basename(pattern)
+      begin
       @pusher.push(:name => test_name, :contents => @directory_reader.read_files(pattern).to_json) do |result|
         handle_test_result(previous_test_result, result)
         previous_test_result = result
+      end
+      rescue => error
+        @writer.write_failing(error.message)
+        Kernel.exit(1)
       end
     end
 

@@ -5,4 +5,4 @@ require 'rubygems'
 require 'spassky'
 require 'spassky/client/cli'
 
-Spassky::Client::Cli.run(ARGV)
+Commandable.execute(ARGV)

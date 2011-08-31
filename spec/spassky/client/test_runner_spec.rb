@@ -81,6 +81,22 @@ module Spassky::Client
       end
     end
 
+    context "server pusher raises exception" do
+      before do
+        @test_pusher.stub!(:push).and_raise("hell")
+      end
+
+      it "writes out the error" do
+        @writer.should_receive(:write_failing).with("hell")
+        @test_runner.run_tests("foo_test")
+      end
+
+      it "exits with an error code" do
+        Kernel.should_receive(:exit).with(1)
+        @test_runner.run_tests("foo_test")
+      end
+    end
+
     context "in progress" do
       it "writes nothing" do
         @test_pusher.stub!(:push).and_yield(new_in_progress_test_result)

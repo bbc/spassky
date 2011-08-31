@@ -19,7 +19,7 @@ Feature: Run QUnit Tests
         ok(true, "it passed");
       });
       """
-      And a file named "qunit_passing/qunit_test/qunit.js" with qunit.js in it
+    And a file named "qunit_passing/qunit_test/qunit.js" with qunit.js in it
     And a file named "qunit_passing/qunit_test/suite.html" with:
       """
       <html>
@@ -32,7 +32,7 @@ Feature: Run QUnit Tests
       </html>
       """
     And a connected mobile device "blackberry"
-    When I run "spassky <host> qunit_passing/qunit_test" with the server host
+    When I run "spassky run qunit_passing/qunit_test <host>" with the server host
     Then the output should contain:
       """
       PASS qunit_test on blackberry
@@ -67,7 +67,7 @@ Feature: Run QUnit Tests
       </html>
       """
     And a connected mobile device "blackberry"
-    When I run "spassky <host> qunit_failing/qunit_test" with the server host
+    When I run "spassky run qunit_failing/qunit_test <host>" with the server host
     Then the output should contain:
       """
       FAIL qunit_test on blackberry

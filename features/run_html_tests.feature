@@ -34,7 +34,7 @@ Feature: Run HTML Tests
 
   Scenario: No connected devices
     Given I have no connected devices
-    When I run "spassky <host> passing.html" with the server host
+    When I run "spassky run passing.html <host>" with the server host
     Then the output should contain:
       """
       There are no connected devices
@@ -43,7 +43,7 @@ Feature: Run HTML Tests
 
   Scenario: One passing test on one device
     Given a connected mobile device "blackberry"
-    When I run "spassky <host> passing.html" with the server host
+    When I run "spassky run passing.html <host>" with the server host
     Then the output should contain:
       """
       PASS passing.html on blackberry
@@ -53,7 +53,7 @@ Feature: Run HTML Tests
   Scenario: One passing test on two devices
     Given a connected mobile device "blackberry"
     And a connected mobile device "iphone"
-    When I run "spassky <host> passing.html" with the server host
+    When I run "spassky run passing.html <host>" with the server host
     Then the output should contain:
       """
       PASS passing.html on blackberry
@@ -66,7 +66,7 @@ Feature: Run HTML Tests
 
   Scenario: Failing test
     Given a connected mobile device "blackberry"
-    When I run "spassky <host> failing.html" with the server host
+    When I run "spassky run failing.html <host>" with the server host
     Then the output should contain:
       """
       FAIL failing.html on blackberry
