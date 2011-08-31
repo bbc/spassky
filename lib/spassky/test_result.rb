@@ -1,3 +1,4 @@
+require 'spassky/test_result_summariser'
 require 'json'
 
 module Spassky
@@ -15,14 +16,6 @@ module Spassky
       "pass"
     end
 
-    def count_fails
-      @device_statuses.count { |s| s.status == "fail" }
-    end
-
-    def count_timeouts
-      @device_statuses.count { |s| s.status == "timed out" }
-    end
-
     def completed_since(older_test_result)
       if older_test_result.nil?
         device_statuses.select { |s| s.completed? }
@@ -31,22 +24,9 @@ module Spassky
       end
     end
 
+
     def summary
-      result = "?"
-      count = @device_statuses.size
-      if count_timeouts > 0
-        result = "1 test timed out on #{count} device"
-      else
-        status = "passed"
-        fail_count = count_fails
-        if fail_count > 0
-          status = "failed"
-          count = fail_count
-        end
-        result = "1 test #{status} on #{count} device"
-      end
-      result << "s" if @device_statuses.size > 1
-      return result
+      TestResultSummariser.new(@device_statuses).summary
     end
 
     def to_json

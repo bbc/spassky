@@ -9,13 +9,12 @@ module Spassky
       end
     end
 
-    context "when one device passes" do
-      it "outputs a summary" do
-        test_result = TestResult.new([
-          Spassky::DeviceTestStatus.new('agent1', 'pass', 'test')
-        ])
-        test_result.summary.should == "1 test passed on 1 device"
-      end
+    it "has a summary" do
+      device_statuses = stub(:device_statuses)
+      test_result_summariser = stub(:test_result_summariser)
+      test_result_summariser.stub!(:summary).and_return("the summary")
+      TestResultSummariser.stub!(:new).with(device_statuses).and_return(test_result_summariser)
+      TestResult.new(device_statuses).summary.should == "the summary"
     end
 
     context "when all devices pass" do
@@ -25,14 +24,6 @@ module Spassky
           Spassky::DeviceTestStatus.new('agent2', 'pass', 'test')
         ]).status.should == "pass"
       end
-
-      it "outputs a pluralised summary" do
-        test_result = TestResult.new([
-          Spassky::DeviceTestStatus.new('agent1', 'pass', 'test'),
-          Spassky::DeviceTestStatus.new('agent2', 'pass', 'test')
-        ])
-        test_result.summary.should == "1 test passed on 2 devices"
-      end
     end
 
     context "when any device fails" do
@@ -41,13 +32,6 @@ module Spassky
           Spassky::DeviceTestStatus.new('agent1', 'pass', 'test'),
           Spassky::DeviceTestStatus.new('agent2', 'fail', 'test')
         ]).status.should == "fail"
-      end
-
-      it "outputs a summary" do
-        test_result = TestResult.new([
-          Spassky::DeviceTestStatus.new('agent1', 'fail', 'test')
-        ])
-        test_result.summary.should == "1 test failed on 1 device"
       end
     end
 
@@ -62,13 +46,6 @@ module Spassky
     end
 
     context "when 1 test times out" do
-      it "outputs the correct summary" do
-        test_result = TestResult.new([
-          Spassky::DeviceTestStatus.new('agent1', 'timed out', 'test')
-        ])
-        test_result.summary.should == "1 test timed out on 1 device"
-      end
-
       it "has the status 'timed out'" do
         test_result = TestResult.new([
           Spassky::DeviceTestStatus.new('agent1', 'timed out', 'test'),
