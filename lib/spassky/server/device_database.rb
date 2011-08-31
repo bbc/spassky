@@ -4,7 +4,7 @@ require "singleton"
 require "fileutils"
 
 module Spassky::Server
-  LATEST = 'http://downloads.sourceforge.net/project/wurfl/WURFL/latest/wurfl-latest.xml.gz'
+  LATEST = 'http://sourceforge.net/projects/wurfl/files/WURFL/2.2/wurfl-2.2.xml.gz/download'
   WURFL_DIRECTORY = File.join(File.dirname(__FILE__), "..", "..", "..", "wurfl")
   WURFL_FILE = File.join(WURFL_DIRECTORY, "wurfl-latest.xml.gz")
 
