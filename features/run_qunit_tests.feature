@@ -19,7 +19,7 @@ Feature: Run QUnit Tests
         ok(true, "it passed");
       });
       """
-    And a file named "qunit_passing/qunit_test/qunit.js" with QUnit.js in it
+      And a file named "qunit_passing/qunit_test/qunit.js" with qunit.js in it
     And a file named "qunit_passing/qunit_test/suite.html" with:
       """
       <html>
@@ -54,7 +54,7 @@ Feature: Run QUnit Tests
         ok(false, "it failed");
       });
       """
-    And a file named "qunit_failing/qunit_test/qunit.js" with QUnit.js in it
+    And a file named "qunit_failing/qunit_test/qunit.js" with qunit.js in it
     And a file named "qunit_failing/qunit_test/suite.html" with:
       """
       <html>
