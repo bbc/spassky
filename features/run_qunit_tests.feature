@@ -73,3 +73,39 @@ Feature: Run QUnit Tests
       FAIL qunit_test on blackberry
       """
     And the exit status should be 1
+
+   
+  Scenario: Support multiple levels of recursion
+    Given a file named "qunit_passing/qunit_test/another_directory/passing.js" with:
+      """
+      QUnit.done = function(result) {
+        if (result.failed > 0) {
+          assert(false, "qunit failed");
+        } else {
+          assert(true, "qunit passed");
+        }
+      };
+
+      test("it passes", function() {
+        ok(true, "it passed");
+      });
+      """
+      And a file named "qunit_passing/qunit_test/another_directory/qunit.js" with qunit.js in it
+    And a file named "qunit_passing/qunit_test/suite.html" with:
+      """
+      <html>
+        <head></head>
+        <body>
+          <h1>A QUnit Suite</h1>
+          <script type="text/javascript" src="another_directory/qunit.js"></script>
+          <script type="text/javascript" src="passing.js"></script>
+        </body>
+      </html>
+      """
+    And a connected mobile device "blackberry"
+    When I run "spassky run qunit_passing/qunit_test <host>" with the server host
+    Then the output should contain:
+      """
+      PASS qunit_test on blackberry
+      """
+    And the exit status should be 0
