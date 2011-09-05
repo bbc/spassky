@@ -27,6 +27,7 @@ module Spassky::Client
       Spassky::Client::DeviceListRetriever.new(server).get_connected_devices.each do |device|
         puts device
       end
+      nil
     end
 
     command "run the spassky server"
