@@ -79,9 +79,11 @@ module Spassky::Server
 
     describe "GET /test_runs/:id/run/:random/assert" do
       it "saves the test result" do
+        @device_database = mock(:device_database, :device_identifier => "the device identifier")
+        SingletonDeviceDatabase.stub!(:instance).and_return(@device_database)
         test = mock(:test)
         TestRun.stub!(:find).with('123').and_return(test)
-        test.should_receive(:save_results_for_user_agent).with(:user_agent => "some user agent", :status => "pass")
+        test.should_receive(:save_result_for_device).with(:device_identifier => "the device identifier", :status => "pass")
         get "/test_runs/123/run/random/assert?status=pass"
       end
     end

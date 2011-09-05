@@ -41,6 +41,15 @@ Feature: Run HTML Tests
       """
     And the exit status should be 1
 
+  Scenario: One device with a user agent that exists in WURFL
+    Given a connected mobile device "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3"
+    When I run "spassky run passing.html <host>" with the server host
+    Then the output should contain:
+      """
+      PASS passing.html on iPhone (id = apple_iphone_ver1_suba543, mobile_browser = Safari, device_os_version = 1.0)
+      """
+    And the exit status should be 0
+
   Scenario: One passing test on one device
     Given a connected mobile device "blackberry"
     When I run "spassky run passing.html <host>" with the server host

@@ -24,15 +24,13 @@ module Spassky::Server
       redirect idle_url
     end
 
-    def get_device_identifier user_agent
-      SingletonDeviceDatabase.instance.device_identifier(user_agent)
+    def get_device_identifier
+      SingletonDeviceDatabase.instance.device_identifier(request.user_agent)
     end
 
     get '/device/idle/:random' do
-      device_identifier = get_device_identifier(request.user_agent)
-
-      test_run = TestRun.find_next_to_run_for_user_agent(device_identifier)
-      @device_list.update_last_connected(device_identifier)
+      test_run = TestRun.find_next_to_run_for_user_agent(get_device_identifier)
+      @device_list.update_last_connected(get_device_identifier)
       if test_run
         redirect_to_run_tests(test_run)
       else
@@ -61,8 +59,8 @@ module Spassky::Server
     end
 
     get '/test_runs/:id/run/:random/assert' do
-      TestRun.find(params[:id]).save_results_for_user_agent(
-        :user_agent => request.user_agent,
+      TestRun.find(params[:id]).save_result_for_device(
+        :device_identifier => get_device_identifier,
         :status => params[:status]
       )
     end

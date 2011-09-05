@@ -17,11 +17,11 @@ module Spassky::Server
       @status_by_user_agent[user_agent] != "in progress"
     end
 
-    def save_results_for_user_agent(options)
+    def save_result_for_device(options)
       unless ['pass', 'fail'].include? options[:status]
         raise "#{options[:status]} is not a valid status"
       end
-      @status_by_user_agent[options[:user_agent]] = options[:status]
+      @status_by_user_agent[options[:device_identifier]] = options[:status]
     end
 
     def update_connected_devices(user_agents)

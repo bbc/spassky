@@ -6,13 +6,13 @@ module Spassky::Server
     before do
       TestRun.delete_all
     end
-        
+
     it "can be created and retrieved" do
       created = TestRun.create(:name => "a test", :contents => "the contents")
       retrieved = TestRun.find(created.id)
       created.should == retrieved
     end
-    
+
     it "assigns each test run a unique id" do
       test_run1 = TestRun.create(:name => "test run 1", :contents => "the contents")
       test_run2 =TestRun.create(:name => "test run 2", :contents => "the contents")
@@ -31,35 +31,35 @@ module Spassky::Server
       TestRun.find_next_to_run_for_user_agent("x").should == created
       TestRun.find_next_to_run_for_user_agent("y").should == created 
     end
-    
+
     it "only returns a test run per user agent until results are saved" do
       created = TestRun.create(:name => "another test", :contents => "the contents of the test", :devices => ["user agent 1"])
       TestRun.find_next_to_run_for_user_agent("user agent 1").should == created
       TestRun.find_next_to_run_for_user_agent("user agent 1").should == created
-      created.save_results_for_user_agent(:user_agent => "user agent 1", :status => "pass")
+      created.save_result_for_device(:device_identifier => "user agent 1", :status => "pass")
       TestRun.find_next_to_run_for_user_agent("user agent 1").should be_nil
     end
-    
+
     it "returns 'in progress' status per user agent until the results are saved" do
       created = TestRun.create(:name => "another test", :contents => "the contents of the test")
       created.result.status.should == 'in progress'
-      created.save_results_for_user_agent(:user_agent => "some user agent", :status => "pass")
+      created.save_result_for_device(:device_identifier => "some user agent", :status => "pass")
       created.result.status.should == 'pass'
     end
-    
+
     it "returns failed if the saved tests results failed" do
       created = TestRun.create(:name => "another test", :contents => "the contents of the test")
-      created.save_results_for_user_agent(:user_agent => "another user agent", :status => "fail")
+      created.save_result_for_device(:device_identifier => "another user agent", :status => "fail")
       created.result.status.should == 'fail'
     end
-    
+
     it "rejects nonsense status" do
       run = TestRun.create(:name => "another test", :contents => "the contents of the test")
       lambda {
-        run.save_results_for_user_agent(:user_agent => "another user agent", :status => "wtf?")
+        run.save_result_for_device(:device_identifier => "another user agent", :status => "wtf?")
       }.should raise_error("wtf? is not a valid status")
     end
-    
+
     it "creates an in progress test result from the device list" do
       run = TestRun.create(
         :name => "another test",
@@ -81,15 +81,15 @@ module Spassky::Server
       run.result.device_statuses.first.status.should == "in progress"
       run.result.device_statuses.last.status.should == "timed out"
     end
-    
+
     it "does not update the status of disconnected devices that have already passed or failed" do
       run = TestRun.create(
         :name => "another test",
         :contents => "the contents of the test",
         :devices => ["device1", "device2"]
       )
-      run.save_results_for_user_agent(:user_agent => "device1", :status => "pass")
-      run.save_results_for_user_agent(:user_agent => "device2", :status => "fail")
+      run.save_result_for_device(:device_identifier => "device1", :status => "pass")
+      run.save_result_for_device(:device_identifier => "device2", :status => "fail")
       run.update_connected_devices([])
       run.result.device_statuses.first.status.should == "pass"
       run.result.device_statuses.last.status.should == "fail"
