@@ -74,7 +74,6 @@ Feature: Run QUnit Tests
       """
     And the exit status should be 1
 
-   
   Scenario: Support multiple levels of recursion
     Given a file named "qunit_passing/qunit_test/another_directory/passing.js" with:
       """
@@ -90,7 +89,7 @@ Feature: Run QUnit Tests
         ok(true, "it passed");
       });
       """
-      And a file named "qunit_passing/qunit_test/another_directory/qunit.js" with qunit.js in it
+    And a file named "qunit_passing/qunit_test/another_directory/qunit.js" with qunit.js in it
     And a file named "qunit_passing/qunit_test/suite.html" with:
       """
       <html>
@@ -98,7 +97,7 @@ Feature: Run QUnit Tests
         <body>
           <h1>A QUnit Suite</h1>
           <script type="text/javascript" src="another_directory/qunit.js"></script>
-          <script type="text/javascript" src="passing.js"></script>
+          <script type="text/javascript" src="another_directory/passing.js"></script>
         </body>
       </html>
       """

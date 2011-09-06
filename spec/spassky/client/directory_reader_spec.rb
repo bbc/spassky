@@ -2,6 +2,29 @@ require 'spassky/client/directory_reader'
 
 module Spassky::Client
   describe DirectoryReader do
+    def stub_file path
+      File.stub!(:directory?).with(path).and_return(false)
+      File.stub!(:file?).with(path).and_return(true)
+    end
+
+    def stub_directory path
+      File.stub!(:directory?).with(path).and_return(true)
+      File.stub!(:file?).with(path).and_return(false)
+    end
+
+    def add_file path, contents
+      @all_paths  ||= []
+      @all_paths << path
+      stub_file path
+      File.stub!(:read).with(path).and_return(contents)
+    end
+
+    def add_directory path
+      @all_paths  ||= []
+      @all_paths << path
+      stub_directory path
+    end
+
     context "when given a file name" do
       it "returns a hash with one file" do
         File.should_receive(:file?).and_return(true)
@@ -11,24 +34,22 @@ module Spassky::Client
         }
       end
     end
+
     context "when given a directory name" do
       before do
-        File.stub!(:directory?).with("directory").and_return(true)
+        stub_directory "directory"
+        @all_paths = []
+        Dir.stub!(:glob).and_return(@all_paths)
       end
 
       it "globs for files in the specified directory" do
-        File.stub!(:file?).and_return(false)
-        File.stub!(:directory?).and_return(true)
-        Dir.should_receive(:glob).with("directory/*").and_return([])
+        Dir.should_receive(:glob).with("directory/**/*").and_return([])
         DirectoryReader.new.read_files("directory")
       end
 
       it "returns a hash with all files in that directory" do
-        File.stub!(:file?).and_return(false)
-        File.stub!(:directory?).and_return(true)
-        Dir.stub!(:glob).and_return ["directory/file1", "directory/file2"]
-        File.stub!(:read).with("directory/file1").and_return("file 1 contents")
-        File.stub!(:read).with("directory/file2").and_return("file 2 contents")
+        add_file "directory/file1", "file 1 contents"
+        add_file "directory/file2", "file 2 contents"
         DirectoryReader.new.read_files("directory").should == {
           "file1" => "file 1 contents",
           "file2" => "file 2 contents"
@@ -36,26 +57,13 @@ module Spassky::Client
       end
 
       it "recursively finds files in a sub-directory" do
-        Dir.stub!(:glob).and_return [
-          "dir/subdir/file.rb",
-          "dir/subdir",
-          "dir/another_file.rb"
-        ]
-
-        File.stub!(:file?).with("dir/subdir/file.rb").and_return true
-        File.stub!(:file?).with("dir/subdir").and_return false
-        File.stub!(:file?).with("dir/another_file.rb").and_return true
-
-        File.stub!(:directory?).with("dir/subdir/file.rb").and_return false
-        File.stub!(:directory?).with("dir/subdir").and_return true
-        File.stub!(:directory?).with("dir/another_file.rb").and_return false
-
-        File.stub!(:read).with("dir/subdir/file.rb").and_return("file 1 contents")
-        File.stub!(:read).with("dir/another_file.rb").and_return("file 2 contents")
+        add_directory "directory/subdir"
+        add_file "directory/subdir/file.html", "file 1 contents"
+        add_file "directory/another_file.txt", "file 2 contents"
 
         DirectoryReader.new.read_files("directory").should == {
-          "dir/subdir/file.rb" => "file 1 contents",
-          "dir/another_file.rb" => "file 2 contents"
+          "subdir/file.html" => "file 1 contents",
+          "another_file.txt" => "file 2 contents"
         }
       end
     end

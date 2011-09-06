@@ -86,12 +86,13 @@ module Spassky::Server
       end
     end
 
-    describe "GET /test_runs/:id/run/:random/filename" do
+    describe "GET /test_runs/:id/run/:random/path/to/file" do
       before do
         @test_contents = {
           "test_file.js"        => "some javascript",
           "fake_test.html.file" => "don't choose this one",
-          "test_name.html"      => "actual test!"
+          "test_name.html"      => "actual test!",
+          "directory/another_directory/filename.txt" => "file 1 contents"
         }
       end
 
@@ -110,6 +111,15 @@ module Spassky::Server
           TestRun.stub!(:find).with('123').and_return(test)
           get "/test_runs/123/run/random/not_a_file"
           last_response.body.should include("actual test!")
+        end
+      end
+
+      context "with a file that is in a subdirectory" do
+        it "returns the file" do
+          test = mock(:test, :name => "test_name", :contents => @test_contents)
+          TestRun.stub!(:find).and_return(test)
+          get "/test_runs/123/run/random/directory/another_directory/filename.txt"
+          last_response.body.should include "file 1 contents"
         end
       end
 
