@@ -65,10 +65,10 @@ module Spassky::Server
       )
     end
 
-    get '/test_runs/:id/run/:random/:file_name' do
+    get "/test_runs/:id/run/:random/*" do
       test_run = TestRun.find(params[:id])
-      test_name = params[:file_name]
-      HtmlTest.new(test_run.contents, idle_url, 1).get_file(test_name)
+      file_name = params[:splat].join("/")
+      HtmlTest.new(test_run.contents, idle_url, 1).get_file(file_name)
     end
 
     private
