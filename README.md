@@ -15,30 +15,30 @@ gem install spassky
 Start the server:
 
 ```
-spassky-server
+spassky server 9191
 ```
 
 Connect some devices by browsing to http://localhost:9191/device/connect on the device. The device will stay in an idle meta refresh loop until it receives a test to run.
 
 Check what devices are connected to the server:
-spassky http://localhost:9191 devices
+spassky devices http://localhost:9191
 
 Run a test:
 
 ```
-spassky http://localhost:9191 html_test.html
+spassky run html_test.html http://localhost:9191
 ```
 
 Run a test with colour:
 
 ```
-spassky http://localhost:9191 html_test.html --colour
+spassky run html_test.html http://localhost:9191 --colour
 ```
 
 Run a directory that contains a test (the first .html file will be used as the test)
 
 ```
-spassky http://localhost:9191 test_directory
+spassky run test_directory http://localhost:9191
 ```
 
 ## Why? ##
@@ -48,6 +48,4 @@ We need to run automated tests on a wide range of web-enabled devices with very 
 Physical devices act as test agents, connected permanently to a central server using meta refresh tags. Using a command-line utility, developers execute tests against those browsers by posting to the central server. The tests themselves are plain HTML pages, that are expected to call an assert URL (e.g. by embedding an image) within a time frame. That means even devices without any JavaScript can run automated tests of some kind.
 
 ## Some features that would be nice to have ##
-- Conveniently run QUnit / Jasmine / other tests
-- Run tests on a subset of agents
 - Assertions on network activity (e.g. for caching tests)
