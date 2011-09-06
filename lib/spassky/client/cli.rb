@@ -18,7 +18,7 @@ module Spassky::Client
     def run(test, server = DEFAULT_SERVER, colour = false)
       writer = colour ? ColouredWriter : DefaultWriter
       pusher = Pusher.new(server)
-      test_runner = TestRunner.new(pusher, writer.new(STDOUT), DirectoryReader.new)
+      test_runner = TestRunner.new(pusher, writer.new(STDOUT), DirectoryReader.new(test))
       test_runner.run_tests(test)
     end
 
