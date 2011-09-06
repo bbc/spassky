@@ -60,7 +60,7 @@ module Spassky
       json = test_result.to_json
       deserialized = TestResult.from_json(json)
       deserialized.device_statuses.size.should == 1
-      deserialized.device_statuses.first.user_agent.should == 'agent'
+      deserialized.device_statuses.first.device_id.should == 'agent'
       deserialized.device_statuses.first.status.should == 'pass'      
     end
 

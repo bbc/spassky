@@ -32,7 +32,7 @@ module Spassky::Client
 
     def write_in_progress_status previous_test_result, test_result
       test_result.completed_since(previous_test_result).each do |device_test_status|
-        write(device_test_status.status, "#{device_test_status.status.upcase} #{device_test_status.test_name} on #{device_test_status.user_agent}")
+        write(device_test_status.status, "#{device_test_status.status.upcase} #{device_test_status.test_name} on #{device_test_status.device_id}")
       end
     end
 

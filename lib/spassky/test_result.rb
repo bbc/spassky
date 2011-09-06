@@ -34,7 +34,7 @@ module Spassky
         :status => "pass",
         :device_statuses => @device_statuses.map do |status|
           {
-            :user_agent => status.user_agent,
+            :device_id => status.device_id,
             :status => status.status,
             :test_name => status.test_name
           }
@@ -46,7 +46,7 @@ module Spassky
       parsed = JSON.parse(json)
       test_result = TestResult.new(
         parsed['device_statuses'].map do |t|
-          DeviceTestStatus.new(t["user_agent"], t["status"], t["test_name"])
+          DeviceTestStatus.new(t["device_id"], t["status"], t["test_name"])
         end
       )
     end
@@ -71,10 +71,10 @@ module Spassky
   end
 
   class DeviceTestStatus
-    attr_reader :user_agent, :status, :test_name
+    attr_reader :device_id, :status, :test_name
 
-    def initialize(user_agent, status, test_name)
-      @user_agent = user_agent
+    def initialize(device_id, status, test_name)
+      @device_id = device_id
       @status = status
       @test_name = test_name
     end

@@ -7,34 +7,34 @@ module Spassky::Server
     def initialize(options)
       @name = options[:name]
       @contents = options[:contents]
-      @status_by_user_agent = {}
+      @status_by_device_id = {}
       (options[:devices] || []).each do |device|
-        @status_by_user_agent[device] = "in progress"
+        @status_by_device_id[device] = "in progress"
       end
     end
 
-    def run_by_user_agent?(user_agent)
-      @status_by_user_agent[user_agent] != "in progress"
+    def run_by_device_id?(device_id)
+      @status_by_device_id[device_id] != "in progress"
     end
 
     def save_result_for_device(options)
       unless ['pass', 'fail'].include? options[:status]
         raise "#{options[:status]} is not a valid status"
       end
-      @status_by_user_agent[options[:device_identifier]] = options[:status]
+      @status_by_device_id[options[:device_identifier]] = options[:status]
     end
 
-    def update_connected_devices(user_agents)
-      @status_by_user_agent.each do |user_agent, status|
-        if !user_agents.include?(user_agent) && status == "in progress"
-          @status_by_user_agent[user_agent] = "timed out"
+    def update_connected_devices(device_ids)
+      @status_by_device_id.each do |device_id, status|
+        if !device_ids.include?(device_id) && status == "in progress"
+          @status_by_device_id[device_id] = "timed out"
         end
       end
     end
 
     def result
-      Spassky::TestResult.new(@status_by_user_agent.map { |user_agent, status|
-        Spassky::DeviceTestStatus.new(user_agent, status, name)
+      Spassky::TestResult.new(@status_by_device_id.map { |device_id, status|
+        Spassky::DeviceTestStatus.new(device_id, status, name)
       })
     end
 
@@ -49,8 +49,8 @@ module Spassky::Server
       test_runs.find { |test_run| test_run.id.to_s == id.to_s  }
     end
 
-    def self.find_next_to_run_for_user_agent(user_agent)
-      test_runs.find { |test_run| test_run.run_by_user_agent?(user_agent) == false }
+    def self.find_next_test_to_run_by_device_id(device_id)
+      test_runs.find { |test_run| test_run.run_by_device_id?(device_id) == false }
     end
 
     def self.delete_all

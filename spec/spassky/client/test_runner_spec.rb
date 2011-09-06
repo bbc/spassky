@@ -124,8 +124,8 @@ module Spassky::Client
         @test_pusher.stub!(:push).and_yield(in_progress_one).and_yield(in_progress_two)
 
         in_progress_two.stub!(:completed_since).with(in_progress_one).and_return([
-          mock(:status_one, :status => "pass", :user_agent => "ipad", :test_name => "foo"),
-          mock(:status_one, :status => "fail", :user_agent => "iphone", :test_name => "bar")
+          mock(:status_one, :status => "pass", :device_id => "ipad", :test_name => "foo"),
+          mock(:status_one, :status => "fail", :device_id => "iphone", :test_name => "bar")
         ])
 
         @writer.should_receive(:write_passing).with("PASS foo on ipad").once

@@ -4,13 +4,13 @@ module Spassky::Server
       @devices_and_time_last_connected = {}
     end
 
-    def update_last_connected user_agent
-      @devices_and_time_last_connected[user_agent] = Time.now
+    def update_last_connected device_id
+      @devices_and_time_last_connected[device_id] = Time.now
     end
 
     def recently_connected_devices
-      @devices_and_time_last_connected.keys.select do |user_agent|
-        Time.now.to_f - @devices_and_time_last_connected[user_agent].to_f < 3
+      @devices_and_time_last_connected.keys.select do |device_id|
+        Time.now.to_f - @devices_and_time_last_connected[device_id].to_f < 3
       end
     end
 

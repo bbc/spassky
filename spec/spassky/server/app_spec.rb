@@ -56,7 +56,7 @@ module Spassky::Server
 
       context "when there are no tests to run on the connected device" do
         it "serves HTML page with a meta-refresh tag" do
-          TestRun.stub!(:find_next_to_run_for_user_agent).and_return(nil)
+          TestRun.stub!(:find_next_test_to_run_by_device_id).and_return(nil)
           RandomStringGenerator.should_receive(:random_string).and_return("next-iteration")
           get "/device/idle/123"
           last_response.body.should include("<meta http-equiv=\"refresh\" content=\"1; url='/device/idle/next-iteration'\">")
@@ -69,7 +69,7 @@ module Spassky::Server
           test = mock(:test, :contents => "test contents")
           test.stub!(:id).and_return("the-test-id")
           test.stub!(:name).and_return("the-test-name")
-          TestRun.stub!(:find_next_to_run_for_user_agent).with("anything").and_return(test)
+          TestRun.stub!(:find_next_test_to_run_by_device_id).with("anything").and_return(test)
           get '/device/idle/123'
           last_response.should be_redirect
           last_response.location.should == 'http://example.org/test_runs/the-test-id/run/a-random-string/the-test-name'

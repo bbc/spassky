@@ -28,16 +28,16 @@ module Spassky::Server
 
     it "returns the next test to run for each device" do
       created = TestRun.create(:name => "test", :contents => "contents", :devices => ["x", "y"])
-      TestRun.find_next_to_run_for_user_agent("x").should == created
-      TestRun.find_next_to_run_for_user_agent("y").should == created 
+      TestRun.find_next_test_to_run_by_device_id("x").should == created
+      TestRun.find_next_test_to_run_by_device_id("y").should == created 
     end
 
     it "only returns a test run per user agent until results are saved" do
       created = TestRun.create(:name => "another test", :contents => "the contents of the test", :devices => ["user agent 1"])
-      TestRun.find_next_to_run_for_user_agent("user agent 1").should == created
-      TestRun.find_next_to_run_for_user_agent("user agent 1").should == created
+      TestRun.find_next_test_to_run_by_device_id("user agent 1").should == created
+      TestRun.find_next_test_to_run_by_device_id("user agent 1").should == created
       created.save_result_for_device(:device_identifier => "user agent 1", :status => "pass")
-      TestRun.find_next_to_run_for_user_agent("user agent 1").should be_nil
+      TestRun.find_next_test_to_run_by_device_id("user agent 1").should be_nil
     end
 
     it "returns 'in progress' status per user agent until the results are saved" do
