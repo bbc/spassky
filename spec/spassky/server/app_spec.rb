@@ -83,8 +83,12 @@ module Spassky::Server
         SingletonDeviceDatabase.stub!(:instance).and_return(@device_database)
         test = mock(:test)
         TestRun.stub!(:find).with('123').and_return(test)
-        test.should_receive(:save_result_for_device).with(:device_identifier => "the device identifier", :status => "pass")
-        get "/test_runs/123/run/random/assert?status=pass"
+        test.should_receive(:save_result_for_device).with(
+          :device_identifier => "the device identifier",
+          :status            => "pass",
+          :message           => "the_test_result_message"
+        )
+        get "/test_runs/123/run/random/assert?status=pass&message=the_test_result_message"
       end
     end
 
