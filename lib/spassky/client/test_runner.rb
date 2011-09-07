@@ -9,29 +9,28 @@ module Spassky::Client
     end
 
     def run_tests(pattern)
-      previous_test_result = nil
       test_name = File.basename(pattern)
       begin
-      @pusher.push(:name => test_name, :contents => @directory_reader.read_files.to_json) do |result|
-        handle_test_result(previous_test_result, result)
-        previous_test_result = result
-      end
+        @pusher.push(:name => test_name, :contents => @directory_reader.read_files.to_json) do |result|
+          handle_test_result(result)
+        end
       rescue => error
         @writer.write_failing(error.message)
         Kernel.exit(1)
       end
     end
 
-    def handle_test_result(previous_test_result, test_result)
-      write_in_progress_status previous_test_result, test_result
+    def handle_test_result(test_result)
+      write_in_progress_status test_result
       unless test_result.status == "in progress"
         write(test_result.status, test_result.summary)
       end
+      @previous_test_result = test_result
       write_exit_code(test_result)
     end
 
-    def write_in_progress_status previous_test_result, test_result
-      test_result.completed_since(previous_test_result).each do |device_test_status|
+    def write_in_progress_status test_result
+      test_result.completed_since(@previous_test_result).each do |device_test_status|
         write(device_test_status.status, "#{device_test_status.status.upcase} #{device_test_status.test_name} on #{device_test_status.device_id}")
       end
     end

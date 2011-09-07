@@ -8,10 +8,6 @@ module Spassky::Client
       @sleeper = sleeper
     end
 
-    def test_runs_url
-      test_runs_url = @server_url.gsub(/\/$/, "") + "/test_runs"
-    end
-
     def push(options)
       location = post_test(options)
       result = nil
@@ -23,6 +19,10 @@ module Spassky::Client
     end
 
     private
+
+    def test_runs_url
+      test_runs_url = @server_url.gsub(/\/$/, "") + "/test_runs"
+    end
 
     def post_test(options)
       RestClient.post(test_runs_url, options) do |response, request, result|
