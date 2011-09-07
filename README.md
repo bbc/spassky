@@ -54,6 +54,20 @@ How it works
 ------------
 Physical devices act as test agents, connected permanently to a central server using meta refresh tags. Using a command-line utility, developers execute tests against those browsers by posting to the central server. The tests themselves are plain HTML pages, that are expected to call an assert URL (e.g. by embedding an image) within a time frame. That means even devices without any JavaScript can run automated tests of some kind.
 
+Test structure
+--------------
+Tests can be either a single html file, or a directory containing multiple files.
+
+If spassky is given a directory, it will pass all files in that directory to that server. The first html file will be used as the test entry point. Any other files in the test directory can be linked to from the html file relatively.
+
+### An example test directory:
+```
+test_name
+ |-scripts/main.js
+ |-css/main.css
+ |-test.html
+```
+
 Some features that would be nice to have
 ----------------------------------------
 - Assertions on network activity (e.g. for caching tests)
