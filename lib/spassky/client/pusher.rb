@@ -25,13 +25,16 @@ module Spassky::Client
     private
 
     def post_test(options)
-      location = nil
       RestClient.post(test_runs_url, options) do |response, request, result|
-        if response.code == 500
-          raise response.to_str
-        end
-        location = response.headers[:location]
+        get_redirect_location response
       end
+    end
+
+    def get_redirect_location response
+      if response.code == 500
+        raise response.to_str
+      end
+      location = response.headers[:location]
       raise "Expected #{test_runs_url} to respond with 302" unless location
       location
     end

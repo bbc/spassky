@@ -29,7 +29,7 @@ module Spassky::Client
       it "returns a hash with one file" do
         File.should_receive(:file?).and_return(true)
         File.should_receive(:read).with("foo").and_return("content")
-        DirectoryReader.new.read_files("foo").should == {
+        DirectoryReader.new("foo").read_files.should == {
           "foo" => "content"
         }
       end
@@ -44,13 +44,15 @@ module Spassky::Client
 
       it "globs for files in the specified directory" do
         Dir.should_receive(:glob).with("directory/**/*").and_return([])
-        DirectoryReader.new.read_files("directory")
+        DirectoryReader.new("directory").read_files
       end
+
+
 
       it "returns a hash with all files in that directory" do
         add_file "directory/file1", "file 1 contents"
         add_file "directory/file2", "file 2 contents"
-        DirectoryReader.new.read_files("directory").should == {
+        DirectoryReader.new("directory").read_files.should == {
           "file1" => "file 1 contents",
           "file2" => "file 2 contents"
         }
@@ -61,7 +63,7 @@ module Spassky::Client
         add_file "directory/subdir/file.html", "file 1 contents"
         add_file "directory/another_file.txt", "file 2 contents"
 
-        DirectoryReader.new.read_files("directory").should == {
+        DirectoryReader.new("directory").read_files.should == {
           "subdir/file.html" => "file 1 contents",
           "another_file.txt" => "file 2 contents"
         }

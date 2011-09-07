@@ -38,15 +38,18 @@ module Spassky::Server
       end
     end
 
+    def create_test_run
+      TestRun.create({
+        :name => params[:name],
+        :contents => JSON.parse(params[:contents]),
+        :devices => @device_list.recently_connected_devices
+      })
+    end
+
     post '/test_runs' do
       recently_connected_devices = @device_list.recently_connected_devices
       if recently_connected_devices.size > 0
-        run = TestRun.create({
-          :name => params[:name],
-          :contents => JSON.parse(params[:contents]),
-          :devices => @device_list.recently_connected_devices
-        })
-        redirect "/test_runs/#{run.id}"
+        redirect "/test_runs/#{create_test_run.id}"
       else
         halt 500, "There are no connected devices"
       end
@@ -66,12 +69,16 @@ module Spassky::Server
     end
 
     get "/test_runs/:id/run/:random/*" do
-      test_run = TestRun.find(params[:id])
       file_name = params[:splat].join("/")
-      HtmlTest.new(test_run.contents, idle_url, 1).get_file(file_name)
+      get_test_file_contents params[:id], file_name
     end
 
     private
+
+    def get_test_file_contents test_run_id, file_name
+      test_run = TestRun.find(params[:id])
+      HtmlTest.new(test_run.contents, idle_url, 1).get_file(file_name)
+    end
 
     def redirect_to_run_tests(test_run)
       redirect "/test_runs/#{test_run.id}/run/#{RandomStringGenerator.random_string}/#{test_run.name}"
@@ -83,8 +90,8 @@ module Spassky::Server
 
     def idle_page
       "<html><head><meta http-equiv=\"refresh\" content=\"1; url='#{idle_url}'\"></head>" +
-      "<body>Idle #{RandomStringGenerator.random_string}</body>" +
-      "</html>"
+        "<body>Idle #{RandomStringGenerator.random_string}</body>" +
+        "</html>"
     end
   end
 end
