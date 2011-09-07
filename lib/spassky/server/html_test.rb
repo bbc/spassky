@@ -2,7 +2,8 @@ module Spassky::Server
   class HtmlTest
     def initialize(contents, url, seconds)
       @contents = contents
-      @meta_refresh_tag = "<meta http-equiv=\"refresh\" content=\"#{seconds}; url='#{url}'\">"
+      @url = url
+      @seconds = seconds
     end
 
     def get_file(name)
@@ -11,7 +12,7 @@ module Spassky::Server
         html_file = @contents.keys.find {|key| key.end_with?(".html")}
         file_contents = @contents[html_file]
       end
-      file_contents.gsub('</head>', assert_js_script_tag + @meta_refresh_tag + '</head>')
+      file_contents.gsub('</head>', assert_js_script_tag + meta_refresh_tag + '</head>')
     end
 
     private
@@ -22,6 +23,10 @@ module Spassky::Server
 
     def assert_js_script
       File.read(File.join(File.dirname(__FILE__), 'assert.js'))
+    end
+
+    def meta_refresh_tag
+      "<meta http-equiv=\"refresh\" content=\"#{@seconds}; url='#{@url}'\">"
     end
   end
 end
