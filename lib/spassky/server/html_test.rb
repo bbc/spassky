@@ -8,21 +8,26 @@ module Spassky::Server
 
     def get_file(name)
       file_contents = @contents[name]
-      unless file_contents
-        html_file = @contents.keys.find {|key| key.end_with?(".html")}
-        file_contents = @contents[html_file]
+      if file_contents.nil?
+        file_contents = get_test_file_contents
       end
-      file_contents.gsub('</head>', assert_js_script_tag + meta_refresh_tag + '</head>')
+      add_helpers_to_html file_contents
     end
 
     private
 
-    def assert_js_script_tag
-      "<script type=\"text/javascript\">#{assert_js_script}</script>"
+    def get_test_file_contents
+      html_file = @contents.keys.find {|key| key.end_with?(".html")}
+      file_contents = @contents[html_file]
+    end
+
+    def add_helpers_to_html html
+      html.gsub('</head>', assert_js_script + meta_refresh_tag + '</head>')
     end
 
     def assert_js_script
-      File.read(File.join(File.dirname(__FILE__), 'assert.js'))
+      assert_js = File.read(File.join(File.dirname(__FILE__), 'assert.js'))
+      "<script type=\"text/javascript\">#{assert_js}</script>"
     end
 
     def meta_refresh_tag
