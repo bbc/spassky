@@ -64,7 +64,8 @@ module Spassky::Server
     get '/test_runs/:id/run/:random/assert' do
       TestRun.find(params[:id]).save_result_for_device(
         :device_identifier => get_device_identifier,
-        :status => params[:status]
+        :status => params[:status],
+        :message => params[:message]
       )
     end
 
