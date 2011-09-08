@@ -44,14 +44,15 @@ module Spassky
     end
 
     def self.from_json json
-      parsed = JSON.parse(json)
-      test_result = TestResult.new(
-        parsed['device_statuses'].map do |t|
-        [:device_id, :test_name, :status, :message].map do |name|
-        end
-          DeviceTestStatus.new({:device_id => t["device_id"], :test_name => t["test_name"], :status => t["status"], :message => t["message"]})
-        end
-      )
+      device_test_statuses = JSON.parse(json)['device_statuses'].map do |device_test_status|
+        DeviceTestStatus.new({
+          :device_id => device_test_status["device_id"],
+          :test_name => device_test_status["test_name"],
+          :status    => device_test_status["status"],
+          :message   => device_test_status["message"]}
+        )
+      end
+      test_result = TestResult.new(device_test_statuses)
     end
 
     private
