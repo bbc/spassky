@@ -1,8 +1,8 @@
 module Spassky
   class DeviceTestStatus
-    attr_reader :device_id, :status, :test_name, :message
+    attr_accessor :device_id, :status, :test_name, :message
 
-    def initialize(options)
+    def initialize(options = {})
       @device_id = options[:device_id]
       @test_name = options[:test_name]
       @status = options[:status]
