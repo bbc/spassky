@@ -88,6 +88,6 @@ Feature: Run HTML Tests
     Then the output should contain:
       """
       FAIL failing.html on blackberry
-      This test should fail
+      this test should fail
       """
     And the exit status should be 1

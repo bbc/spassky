@@ -15,15 +15,15 @@ module Spassky::Client
     end
 
     def in_progress_status
-      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'in progress', 'test')]).to_json
+      Spassky::TestResult.new([Spassky::DeviceTestStatus.new({:device_id => 'agent', :status => 'in progress', :test_name => 'test'})]).to_json
     end
 
     def passed_status
-      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'pass', 'test')]).to_json
+      Spassky::TestResult.new([Spassky::DeviceTestStatus.new({:device_id => 'agent', :status => 'pass', :test_name => 'test'})]).to_json
     end
 
     def failed_status
-      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'fail', 'test')]).to_json
+      Spassky::TestResult.new([Spassky::DeviceTestStatus.new({:device_id => 'agent', :status => 'fail', :test_name => 'test'})]).to_json
     end
 
     it "pushes a test to the server" do

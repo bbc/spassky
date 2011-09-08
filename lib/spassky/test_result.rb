@@ -1,4 +1,5 @@
 require 'spassky/test_result_summariser'
+require 'spassky/device_test_status'
 require 'json'
 
 module Spassky
@@ -24,7 +25,6 @@ module Spassky
       end
     end
 
-
     def summary
       TestResultSummariser.new(@device_statuses).summary
     end
@@ -35,8 +35,9 @@ module Spassky
         :device_statuses => @device_statuses.map do |status|
           {
             :device_id => status.device_id,
+            :test_name => status.test_name,
             :status => status.status,
-            :test_name => status.test_name
+            :message => status.message
           }
         end
       }.to_json
@@ -46,7 +47,9 @@ module Spassky
       parsed = JSON.parse(json)
       test_result = TestResult.new(
         parsed['device_statuses'].map do |t|
-          DeviceTestStatus.new(t["device_id"], t["status"], t["test_name"])
+        [:device_id, :test_name, :status, :message].map do |name|
+        end
+          DeviceTestStatus.new({:device_id => t["device_id"], :test_name => t["test_name"], :status => t["status"], :message => t["message"]})
         end
       )
     end
@@ -67,24 +70,6 @@ module Spassky
       device_statuses.each_with_index do |s, i|
         yield older_test_result.device_statuses[i], s
       end
-    end
-  end
-
-  class DeviceTestStatus
-    attr_reader :device_id, :status, :test_name
-
-    def initialize(device_id, status, test_name)
-      @device_id = device_id
-      @status = status
-      @test_name = test_name
-    end
-
-    def in_progress?
-      @status == "in progress"
-    end
-
-    def completed?
-      @status != "in progress"
     end
   end
 end

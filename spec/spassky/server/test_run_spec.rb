@@ -94,5 +94,19 @@ module Spassky::Server
       run.result.device_statuses.first.status.should == "pass"
       run.result.device_statuses.last.status.should == "fail"
     end
+
+    it "returns device test statuses" do
+      run = TestRun.create({:name => "test name"})
+      run.save_result_for_device(
+        :device_identifier => "device",
+        :status => "pass",
+        :message => "the status message"
+      )
+      device_status = run.result.device_statuses.first
+      device_status.device_id.should == "device"
+      device_status.test_name.should == "test name"
+      device_status.status.should == "pass"
+      device_status.message.should == "the status message"
+    end
   end
 end

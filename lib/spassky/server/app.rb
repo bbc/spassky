@@ -91,8 +91,8 @@ module Spassky::Server
 
     def idle_page
       "<html><head><meta http-equiv=\"refresh\" content=\"1; url='#{idle_url}'\"></head>" +
-        "<body>Idle #{RandomStringGenerator.random_string}</body>" +
-        "</html>"
+      "<body>Idle #{RandomStringGenerator.random_string}</body>" +
+      "</html>"
     end
   end
 end
