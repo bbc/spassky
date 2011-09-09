@@ -15,11 +15,11 @@ module Spassky::Client
     DEFAULT_SERVER = "http://localhost:#{DEFAULT_PORT}"
 
     command "run a test"
-    def run(test, server = DEFAULT_SERVER, colour = false)
+    def run(pattern, test, server = DEFAULT_SERVER, colour = false)
       writer = colour ? ColouredWriter : DefaultWriter
       pusher = Pusher.new(server)
-      test_runner = TestRunner.new(pusher, writer.new(STDOUT), DirectoryReader.new(test))
-      test_runner.run_tests(test)
+      test_runner = TestRunner.new(pusher, writer.new(STDOUT), DirectoryReader.new(pattern))
+      test_runner.run_tests(pattern, test)
     end
 
     command "list devices"

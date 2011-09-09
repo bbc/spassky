@@ -8,8 +8,7 @@ module Spassky::Client
       @directory_reader = directory_reader
     end
 
-    def run_tests(pattern)
-      test_name = File.basename(pattern)
+    def run_tests(pattern, test_name)
       begin
         @pusher.push(:name => test_name, :contents => @directory_reader.read_files.to_json) do |result|
           handle_test_result(result)

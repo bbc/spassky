@@ -20,7 +20,7 @@ Feature: Run QUnit Tests
       });
       """
     And a file named "qunit_passing/qunit_test/qunit.js" with qunit.js in it
-    And a file named "qunit_passing/qunit_test/suite.html" with:
+    And a file named "qunit_passing/qunit_test/test_suite.html" with:
       """
       <html>
         <head></head>
@@ -32,10 +32,10 @@ Feature: Run QUnit Tests
       </html>
       """
     And a connected mobile device "blackberry"
-    When I run "spassky run qunit_passing/qunit_test <host>" with the server host
+    When I run "spassky run qunit_passing/qunit_test test_suite.html <host>" with the server host
     Then the output should contain:
       """
-      PASS qunit_test on blackberry
+      PASS test_suite.html on blackberry
       """
     And the exit status should be 0
 
@@ -55,7 +55,7 @@ Feature: Run QUnit Tests
       });
       """
     And a file named "qunit_failing/qunit_test/qunit.js" with qunit.js in it
-    And a file named "qunit_failing/qunit_test/suite.html" with:
+    And a file named "qunit_failing/qunit_test/test_suite.html" with:
       """
       <html>
         <head></head>
@@ -67,10 +67,10 @@ Feature: Run QUnit Tests
       </html>
       """
     And a connected mobile device "blackberry"
-    When I run "spassky run qunit_failing/qunit_test <host>" with the server host
+    When I run "spassky run qunit_failing/qunit_test test_suite.html <host>" with the server host
     Then the output should contain:
       """
-      FAIL qunit_test on blackberry
+      FAIL test_suite.html on blackberry
       """
     And the exit status should be 1
 
@@ -90,7 +90,7 @@ Feature: Run QUnit Tests
       });
       """
     And a file named "qunit_passing/qunit_test/another_directory/qunit.js" with qunit.js in it
-    And a file named "qunit_passing/qunit_test/suite.html" with:
+    And a file named "qunit_passing/qunit_test/test_suite.html" with:
       """
       <html>
         <head></head>
@@ -102,9 +102,9 @@ Feature: Run QUnit Tests
       </html>
       """
     And a connected mobile device "blackberry"
-    When I run "spassky run qunit_passing/qunit_test <host>" with the server host
+    When I run "spassky run qunit_passing/qunit_test test_suite.html <host>" with the server host
     Then the output should contain:
       """
-      PASS qunit_test on blackberry
+      PASS test_suite.html on blackberry
       """
     And the exit status should be 0
