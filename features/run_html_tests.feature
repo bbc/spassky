@@ -81,3 +81,13 @@ Feature: Run HTML Tests
       FAIL failing.html on blackberry
       """
     And the exit status should be 1
+
+  Scenario: Failing Test with Message
+    Given a connected mobile device "blackberry"
+    When I run "spassky run failing.html <host>" with the server host
+    Then the output should contain:
+      """
+      FAIL failing.html on blackberry
+      this test should fail
+      """
+    And the exit status should be 1

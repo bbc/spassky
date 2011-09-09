@@ -8,6 +8,7 @@ module Spassky::Server
       @name = options[:name]
       @contents = options[:contents]
       @status_by_device_id = {}
+      @message_by_device_id = {}
       (options[:devices] || []).each do |device|
         @status_by_device_id[device] = "in progress"
       end
@@ -22,6 +23,7 @@ module Spassky::Server
         raise "#{options[:status]} is not a valid status"
       end
       @status_by_device_id[options[:device_identifier]] = options[:status]
+      @message_by_device_id[options[:device_identifier]] = options[:message]
     end
 
     def update_connected_devices(device_ids)
@@ -34,7 +36,7 @@ module Spassky::Server
 
     def result
       Spassky::TestResult.new(@status_by_device_id.map { |device_id, status|
-        Spassky::DeviceTestStatus.new(device_id, status, name)
+        Spassky::DeviceTestStatus.new(:device_id => device_id, :status => status, :message => @message_by_device_id[device_id], :test_name => @name)
       })
     end
 

@@ -64,7 +64,8 @@ module Spassky::Server
     get '/test_runs/:id/run/:random/assert' do
       TestRun.find(params[:id]).save_result_for_device(
         :device_identifier => get_device_identifier,
-        :status => params[:status]
+        :status => params[:status],
+        :message => params[:message]
       )
     end
 
@@ -90,8 +91,8 @@ module Spassky::Server
 
     def idle_page
       "<html><head><meta http-equiv=\"refresh\" content=\"1; url='#{idle_url}'\"></head>" +
-        "<body>Idle #{RandomStringGenerator.random_string}</body>" +
-        "</html>"
+      "<body>Idle #{RandomStringGenerator.random_string}</body>" +
+      "</html>"
     end
   end
 end

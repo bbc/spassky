@@ -124,12 +124,28 @@ module Spassky::Client
         @test_pusher.stub!(:push).and_yield(in_progress_one).and_yield(in_progress_two)
 
         in_progress_two.stub!(:completed_since).with(in_progress_one).and_return([
-          mock(:status_one, :status => "pass", :device_id => "ipad", :test_name => "foo"),
-          mock(:status_one, :status => "fail", :device_id => "iphone", :test_name => "bar")
+          mock(:status_one, :status => "pass", :device_id => "ipad", :test_name => "foo", :message => "test_result"),
+          mock(:status_one, :status => "fail", :device_id => "iphone", :test_name => "bar", :message => "test_result")
         ])
 
         @writer.should_receive(:write_passing).with("PASS foo on ipad").once
         @writer.should_receive(:write_failing).with("FAIL bar on iphone").once
+
+        @test_runner.run_tests("foo bar")
+      end
+    end
+
+    context "failed result yielded" do
+      it "writes out the test message" do
+        in_progress_one = new_in_progress_test_result
+        in_progress_two = new_in_progress_test_result
+        @test_pusher.stub!(:push).and_yield(in_progress_one).and_yield(in_progress_two)
+
+        in_progress_two.stub!(:completed_since).with(in_progress_one).and_return([
+          mock(:status_one, :status => "fail", :device_id => "iphone", :test_name => "bar", :message => "test result message")
+        ])
+
+        @writer.should_receive(:write_failing).with("test result message").once
 
         @test_runner.run_tests("foo bar")
       end

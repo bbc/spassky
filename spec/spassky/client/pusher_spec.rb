@@ -15,15 +15,15 @@ module Spassky::Client
     end
 
     def in_progress_status
-      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'in progress', 'test')]).to_json
+      Spassky::TestResult.new([FactoryGirl.build(:device_test_status, :status => 'in progress')]).to_json
     end
 
     def passed_status
-      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'pass', 'test')]).to_json
+      Spassky::TestResult.new([FactoryGirl.build(:device_test_status)]).to_json
     end
 
     def failed_status
-      Spassky::TestResult.new([Spassky::DeviceTestStatus.new('agent', 'fail', 'test')]).to_json
+      Spassky::TestResult.new([FactoryGirl.build(:device_test_status, :status => 'fail')]).to_json
     end
 
     it "pushes a test to the server" do
@@ -65,12 +65,15 @@ module Spassky::Client
     end
 
     it "yields the outcome of the test to the block" do
-      RestClient.stub!(:get).and_return(in_progress_status, in_progress_status, passed_status)
+      in_progress_status1 = in_progress_status
+      in_progress_status2 = in_progress_status
+      passed_status1 = passed_status
+      RestClient.stub!(:get).and_return(in_progress_status1, in_progress_status2, passed_status1)
       yielded_results = []
       @pusher.push("test contents") do |result|
         yielded_results << result.to_json
       end
-      yielded_results.should == [in_progress_status, in_progress_status, passed_status]
+      yielded_results.should == [in_progress_status1, in_progress_status2, passed_status1]
     end
 
     it "sleeps while looping during get requests" do
