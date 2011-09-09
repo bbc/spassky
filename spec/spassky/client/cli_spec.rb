@@ -27,7 +27,6 @@ module Spassky::Client
 
       it "runs a test" do
         runner.should_receive(:run_test_suite).with("test_pattern", "test_name")
-        Cli.new.run "test_pattern", "test_name", "server_name"
       end
 
       context "without colour output option" do
@@ -35,7 +34,6 @@ module Spassky::Client
           default_writer = mock :default_writer
           DefaultWriter.should_receive(:new).with(STDOUT).and_return(default_writer)
           TestSuiteRunner.should_receive(:new).with(anything(), default_writer, anything())
-          Cli.new.run "test_pattern", "test_name", "server_name"
         end
       end
 
@@ -44,7 +42,6 @@ module Spassky::Client
           coloured_writer = mock :coloured_writer
           ColouredWriter.should_receive(:new).with(STDOUT).and_return(coloured_writer)
           TestSuiteRunner.should_receive(:new).with(anything(), coloured_writer, anything())
-          Cli.new.run "test_pattern", "test_name", "server_name", "--colour"
         end
       end
     end
