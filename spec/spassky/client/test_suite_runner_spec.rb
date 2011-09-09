@@ -14,28 +14,28 @@ module Spassky::Client
       @test_suite_runner = TestSuiteRunner.new(@test_pusher, @writer, @directory_reader)
     end
 
-    def new_test_result status, summary
-      test_result = mock :"#{status.gsub(" ", "_")}_test_result"
-      test_result.stub!(:status).and_return status
-      test_result.stub!(:summary).and_return summary
-      test_result.stub!(:completed_since).and_return([])
-      test_result
+    def new_test_suite_result status, summary
+      test_suite_result = mock :"#{status.gsub(" ", "_")}_test_suite_result"
+      test_suite_result.stub!(:status).and_return status
+      test_suite_result.stub!(:summary).and_return summary
+      test_suite_result.stub!(:completed_since).and_return([])
+      test_suite_result
     end
 
-    def new_in_progress_test_result
-      new_test_result "in progress", "in progress summary"
+    def new_in_progress_test_suite_result
+      new_test_suite_result "in progress", "in progress summary"
     end
 
-    def new_passed_test_result
-      new_test_result "pass", "pass summary"
+    def new_passed_test_suite_result
+      new_test_suite_result "pass", "pass summary"
     end
 
-    def new_failed_test_result
-      new_test_result "fail", "fail summary"
+    def new_failed_test_suite_result
+      new_test_suite_result "fail", "fail summary"
     end
 
-    def new_timeout_test_result
-      new_test_result "timed out", "timed out summary"
+    def new_timeout_test_suite_result
+      new_test_suite_result "timed out", "timed out summary"
     end
 
     it "reads a test" do
@@ -51,7 +51,7 @@ module Spassky::Client
 
     context "timeout" do
       it 'returns a exit status of 2' do
-        @test_pusher.stub!(:push).and_yield(new_timeout_test_result)
+        @test_pusher.stub!(:push).and_yield(new_timeout_test_suite_result)
         Kernel.should_receive(:exit).with(2)
         @test_suite_runner.run_test_suite("foo_test", "test name")
       end
@@ -59,7 +59,7 @@ module Spassky::Client
 
     context "failing test" do
       before do
-        @test_pusher.stub!(:push).and_yield(new_failed_test_result)
+        @test_pusher.stub!(:push).and_yield(new_failed_test_suite_result)
       end
 
       it "only writes once" do
@@ -75,7 +75,7 @@ module Spassky::Client
 
     context "passing test" do
       it "writes passing output" do
-        @test_pusher.stub!(:push).and_yield(new_passed_test_result)
+        @test_pusher.stub!(:push).and_yield(new_passed_test_suite_result)
         @writer.should_receive(:write_passing).with("pass summary")
         @test_suite_runner.run_test_suite("foo_test", "test name")
       end
@@ -99,7 +99,7 @@ module Spassky::Client
 
     context "in progress" do
       it "writes nothing" do
-        @test_pusher.stub!(:push).and_yield(new_in_progress_test_result)
+        @test_pusher.stub!(:push).and_yield(new_in_progress_test_suite_result)
         @writer = mock(:writer)
         @writer.should_not_receive(:write_passing)
         @writer.should_not_receive(:write_failing)
@@ -109,9 +109,9 @@ module Spassky::Client
 
     context "in progress, then passed result yielded" do
       it "only writes out the summary when the status is not 'in progress'" do
-        in_progress_test_result = new_in_progress_test_result
-        pass_test_result        = new_passed_test_result
-        @test_pusher.stub!(:push).and_yield(in_progress_test_result).and_yield(pass_test_result)
+        in_progress_test_suite_result = new_in_progress_test_suite_result
+        pass_test_suite_result        = new_passed_test_suite_result
+        @test_pusher.stub!(:push).and_yield(in_progress_test_suite_result).and_yield(pass_test_suite_result)
         @writer.should_receive(:write_passing).with("pass summary").once
         @test_suite_runner.run_test_suite("foo_test", "test name")
       end
@@ -119,13 +119,13 @@ module Spassky::Client
 
     context "in progress twice then passed result yielded" do
       it "writes the difference between test results on each iteration" do
-        in_progress_one = new_in_progress_test_result
-        in_progress_two = new_in_progress_test_result
+        in_progress_one = new_in_progress_test_suite_result
+        in_progress_two = new_in_progress_test_suite_result
         @test_pusher.stub!(:push).and_yield(in_progress_one).and_yield(in_progress_two)
 
         in_progress_two.stub!(:completed_since).with(in_progress_one).and_return([
-          mock(:status_one, :status => "pass", :device_id => "ipad", :test_name => "foo", :message => "test_result"),
-          mock(:status_one, :status => "fail", :device_id => "iphone", :test_name => "bar", :message => "test_result")
+          mock(:status_one, :status => "pass", :device_id => "ipad", :test_name => "foo", :message => "test_suite_result"),
+          mock(:status_one, :status => "fail", :device_id => "iphone", :test_name => "bar", :message => "test_suite_result")
         ])
 
         @writer.should_receive(:write_passing).with("PASS foo on ipad").once
@@ -137,8 +137,8 @@ module Spassky::Client
 
     context "failed result yielded" do
       it "writes out the test message" do
-        in_progress_one = new_in_progress_test_result
-        in_progress_two = new_in_progress_test_result
+        in_progress_one = new_in_progress_test_suite_result
+        in_progress_two = new_in_progress_test_suite_result
         @test_pusher.stub!(:push).and_yield(in_progress_one).and_yield(in_progress_two)
 
         in_progress_two.stub!(:completed_since).with(in_progress_one).and_return([

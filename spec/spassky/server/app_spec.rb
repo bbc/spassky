@@ -86,9 +86,9 @@ module Spassky::Server
         test.should_receive(:save_result_for_device).with(
           :device_identifier => "the device identifier",
           :status            => "pass",
-          :message           => "the_test_result_message"
+          :message           => "the_test_suite_result_message"
         )
-        get "/test_runs/123/run/random/assert?status=pass&message=the_test_result_message"
+        get "/test_runs/123/run/random/assert?status=pass&message=the_test_suite_result_message"
       end
     end
 
@@ -188,9 +188,9 @@ module Spassky::Server
     describe "GET /test_runs/123" do
       it "returns the status of the test with the id '123'" do
         test_run = mock(:test_run)
-        test_result = mock(:test_result)
-        test_result.stub!(:to_json).and_return("the test run as json")
-        test_run.stub!(:result).and_return(test_result)
+        test_suite_result = mock(:test_suite_result)
+        test_suite_result.stub!(:to_json).and_return("the test run as json")
+        test_run.stub!(:result).and_return(test_suite_result)
         test_run.stub!(:update_connected_devices)
         TestRun.should_receive(:find).with('123').and_return test_run
         get '/test_runs/123'
@@ -199,9 +199,9 @@ module Spassky::Server
 
       it "tells the test run which devices are still connected" do
         test_run = mock(:test_run)
-        test_result = mock(:test_result)
-        test_result.stub!(:to_json).and_return("the test run as json")
-        test_run.stub!(:result).and_return(test_result)
+        test_suite_result = mock(:test_suite_result)
+        test_suite_result.stub!(:to_json).and_return("the test run as json")
+        test_run.stub!(:result).and_return(test_suite_result)
         TestRun.stub!(:find).with('123').and_return test_run
         still_connected_devices = ["device1", "device2"]
         device_list.stub!(:recently_connected_devices).and_return(still_connected_devices)

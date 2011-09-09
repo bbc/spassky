@@ -1,4 +1,4 @@
-require 'spassky/test_result'
+require 'spassky/test_suite_result'
 
 module Spassky::Server
   class TestRun
@@ -35,7 +35,7 @@ module Spassky::Server
     end
 
     def result
-      Spassky::TestResult.new(@status_by_device_id.map { |device_id, status|
+      Spassky::TestSuiteResult.new(@status_by_device_id.map { |device_id, status|
         Spassky::DeviceTestStatus.new(:device_id => device_id, :status => status, :message => @message_by_device_id[device_id], :test_name => @name)
       })
     end

@@ -1,5 +1,5 @@
 require 'rest-client'
-require 'spassky/test_result'
+require 'spassky/test_suite_result'
 
 module Spassky::Client
   class Pusher
@@ -12,7 +12,7 @@ module Spassky::Client
       location = post_test(options)
       result = nil
       begin
-        result = Spassky::TestResult.from_json(RestClient.get(location))
+        result = Spassky::TestSuiteResult.from_json(RestClient.get(location))
         yield result
         @sleeper.sleep 0.4 if result.status == 'in progress'
       end while result.status == 'in progress'

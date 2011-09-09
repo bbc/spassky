@@ -15,15 +15,15 @@ module Spassky::Client
     end
 
     def in_progress_status
-      Spassky::TestResult.new([FactoryGirl.build(:device_test_status, :status => 'in progress')]).to_json
+      Spassky::TestSuiteResult.new([FactoryGirl.build(:device_test_status, :status => 'in progress')]).to_json
     end
 
     def passed_status
-      Spassky::TestResult.new([FactoryGirl.build(:device_test_status)]).to_json
+      Spassky::TestSuiteResult.new([FactoryGirl.build(:device_test_status)]).to_json
     end
 
     def failed_status
-      Spassky::TestResult.new([FactoryGirl.build(:device_test_status, :status => 'fail')]).to_json
+      Spassky::TestSuiteResult.new([FactoryGirl.build(:device_test_status, :status => 'fail')]).to_json
     end
 
     it "pushes a test to the server" do

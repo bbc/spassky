@@ -3,7 +3,7 @@ require 'spassky/device_test_status'
 require 'json'
 
 module Spassky
-  class TestResult
+  class TestSuiteResult
     attr_reader :device_statuses
     def initialize device_statuses
       @device_statuses = device_statuses
@@ -17,11 +17,11 @@ module Spassky
       "pass"
     end
 
-    def completed_since(older_test_result)
-      if older_test_result.nil?
+    def completed_since(older_test_suite_result)
+      if older_test_suite_result.nil?
         device_statuses.select { |s| s.completed? }
       else
-        find_newly_completed_device_results(older_test_result)
+        find_newly_completed_device_results(older_test_suite_result)
       end
     end
 
@@ -52,14 +52,14 @@ module Spassky
           :message   => device_test_status["message"]}
         )
       end
-      test_result = TestResult.new(device_test_statuses)
+      test_suite_result = TestSuiteResult.new(device_test_statuses)
     end
 
     private
 
-    def find_newly_completed_device_results(older_test_result)
+    def find_newly_completed_device_results(older_test_suite_result)
       completed = []
-      before_and_after(older_test_result) do |before, after|
+      before_and_after(older_test_suite_result) do |before, after|
         if before.in_progress? && after.completed?
           completed << after
         end
@@ -67,9 +67,9 @@ module Spassky
       completed
     end
 
-    def before_and_after(older_test_result)
+    def before_and_after(older_test_suite_result)
       device_statuses.each_with_index do |s, i|
-        yield older_test_result.device_statuses[i], s
+        yield older_test_suite_result.device_statuses[i], s
       end
     end
   end

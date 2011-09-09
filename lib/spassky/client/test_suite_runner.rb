@@ -11,7 +11,7 @@ module Spassky::Client
     def run_test_suite(pattern, test_name)
       begin
         @pusher.push(:name => test_name, :contents => @directory_reader.read_files.to_json) do |result|
-          handle_test_result(result)
+          handle_test_suite_result(result)
         end
       rescue => error
         @writer.write_failing(error.message)
@@ -19,17 +19,17 @@ module Spassky::Client
       end
     end
 
-    def handle_test_result(test_result)
-      write_in_progress_status test_result
-      unless test_result.status == "in progress"
-        write(test_result.status, test_result.summary)
+    def handle_test_suite_result(test_suite_result)
+      write_in_progress_status test_suite_result
+      unless test_suite_result.status == "in progress"
+        write(test_suite_result.status, test_suite_result.summary)
       end
-      @previous_test_result = test_result
-      write_exit_code(test_result)
+      @previous_test_suite_result = test_suite_result
+      write_exit_code(test_suite_result)
     end
 
-    def write_in_progress_status test_result
-      test_result.completed_since(@previous_test_result).each do |device_test_status|
+    def write_in_progress_status test_suite_result
+      test_suite_result.completed_since(@previous_test_suite_result).each do |device_test_status|
         write_completed_test_status device_test_status
       end
     end
