@@ -17,15 +17,17 @@ module Spassky::Client
     end
 
     describe "spassky run" do
-      it "creates a pusher with the server url as the first argument" do
-        Pusher.should_receive(:new).with("server_name").and_return(pusher)
-        TestRunner.should_receive(:new).with(pusher, anything(), anything()).and_return(runner)
-        Cli.new.run "test_name", "server_name"
+      context "with a server url" do
+        it "creates a pusher" do
+          Pusher.should_receive(:new).with("server_name").and_return(pusher)
+          TestRunner.should_receive(:new).with(pusher, anything(), anything()).and_return(runner)
+          Cli.new.run "test_pattern", "test_name", "server_name"
+        end
       end
 
-      it "runs a single test with the name as the second argument" do
-        runner.should_receive(:run_tests).with("test_name")
-        Cli.new.run "test_name", "server_name"
+      it "runs a test" do
+        runner.should_receive(:run_tests).with("test_pattern", "test_name")
+        Cli.new.run "test_pattern", "test_name", "server_name"
       end
 
       context "without colour output option" do
@@ -33,7 +35,7 @@ module Spassky::Client
           default_writer = mock :default_writer
           DefaultWriter.should_receive(:new).with(STDOUT).and_return(default_writer)
           TestRunner.should_receive(:new).with(anything(), default_writer, anything())
-          Cli.new.run "test_name", "server_name"
+          Cli.new.run "test_pattern", "test_name", "server_name"
         end
       end
 
@@ -42,7 +44,7 @@ module Spassky::Client
           coloured_writer = mock :coloured_writer
           ColouredWriter.should_receive(:new).with(STDOUT).and_return(coloured_writer)
           TestRunner.should_receive(:new).with(anything(), coloured_writer, anything())
-          Cli.new.run "test_name", "server_name", "--colour"
+          Cli.new.run "test_pattern", "test_name", "server_name", "--colour"
         end
       end
     end

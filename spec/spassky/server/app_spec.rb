@@ -111,15 +111,6 @@ module Spassky::Server
         end
       end
 
-      context "file name is not a file" do
-        it "returns the first file that ends with .html" do
-          test = mock(:test, :name => "directory/test_name.html", :contents => @test_contents)
-          TestRun.stub!(:find).with('123').and_return(test)
-          get "/test_runs/123/run/random/not_a_file"
-          last_response.body.should include("actual test!")
-        end
-      end
-
       context "with a file that is in a subdirectory" do
         it "returns the file" do
           test = mock(:test, :name => "test_name", :contents => @test_contents)

@@ -41,19 +41,19 @@ module Spassky::Client
     it "reads a test" do
       @test_pusher.stub!(:push)
       @directory_reader.should_receive(:read_files).and_return(:file_body)
-      @test_runner.run_tests("foo_test")
+      @test_runner.run_tests("foo_test", "test name")
     end
 
-    it "gets the test name from the base name of the pattern and pushes the test" do
+    it "pushes the test" do
       @test_pusher.should_receive(:push).with({:name => 'foo_test', :contents => { "test.html" => "contents" }.to_json })
-      @test_runner.run_tests("path/to/foo_test")
+      @test_runner.run_tests("path/to/test", "foo_test")
     end
 
     context "timeout" do
       it 'returns a exit status of 2' do
         @test_pusher.stub!(:push).and_yield(new_timeout_test_result)
         Kernel.should_receive(:exit).with(2)
-        @test_runner.run_tests("foo_test")
+        @test_runner.run_tests("foo_test", "test name")
       end
     end
 
@@ -64,12 +64,12 @@ module Spassky::Client
 
       it "only writes once" do
         @writer.should_receive(:write_failing).once
-        @test_runner.run_tests("foo_test")
+        @test_runner.run_tests("foo_test", "test name")
       end
 
       it "writes out an error code" do
         Kernel.should_receive(:exit).with(1)
-        @test_runner.run_tests("foo_test")
+        @test_runner.run_tests("foo_test", "test name")
       end
     end
 
@@ -77,7 +77,7 @@ module Spassky::Client
       it "writes passing output" do
         @test_pusher.stub!(:push).and_yield(new_passed_test_result)
         @writer.should_receive(:write_passing).with("pass summary")
-        @test_runner.run_tests("foo_test")
+        @test_runner.run_tests("foo_test", "test name")
       end
     end
 
@@ -88,12 +88,12 @@ module Spassky::Client
 
       it "writes out the error" do
         @writer.should_receive(:write_failing).with("hell")
-        @test_runner.run_tests("foo_test")
+        @test_runner.run_tests("foo_test", "test name")
       end
 
       it "exits with an error code" do
         Kernel.should_receive(:exit).with(1)
-        @test_runner.run_tests("foo_test")
+        @test_runner.run_tests("foo_test", "test name")
       end
     end
 
@@ -103,7 +103,7 @@ module Spassky::Client
         @writer = mock(:writer)
         @writer.should_not_receive(:write_passing)
         @writer.should_not_receive(:write_failing)
-        TestRunner.new(@test_pusher, @writer, @directory_reader).run_tests("foo_test")
+        TestRunner.new(@test_pusher, @writer, @directory_reader).run_tests("foo_test", "test name")
       end
     end
 
@@ -113,7 +113,7 @@ module Spassky::Client
         pass_test_result        = new_passed_test_result
         @test_pusher.stub!(:push).and_yield(in_progress_test_result).and_yield(pass_test_result)
         @writer.should_receive(:write_passing).with("pass summary").once
-        @test_runner.run_tests("foo_test")
+        @test_runner.run_tests("foo_test", "test name")
       end
     end
 
@@ -131,7 +131,7 @@ module Spassky::Client
         @writer.should_receive(:write_passing).with("PASS foo on ipad").once
         @writer.should_receive(:write_failing).with("FAIL bar on iphone").once
 
-        @test_runner.run_tests("foo bar")
+        @test_runner.run_tests("foo bar", "test name")
       end
     end
 
@@ -147,7 +147,7 @@ module Spassky::Client
 
         @writer.should_receive(:write_failing).with("test result message").once
 
-        @test_runner.run_tests("foo bar")
+        @test_runner.run_tests("foo bar", "test name")
       end
     end
   end

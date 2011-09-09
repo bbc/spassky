@@ -28,22 +28,22 @@ Check what devices are connected to the server:
 spassky devices http://localhost:9191
 ```
 
-Run a test:
+Run a single html file (the second parameter is the test name):
 
 ```
-spassky run html_test.html http://localhost:9191
+spassky run html_test.html html_test.html http://localhost:9191
 ```
 
 Run a test with colour:
 
 ```
-spassky run html_test.html http://localhost:9191 --colour
+spassky run html_test.html html_test.html http://localhost:9191 --colour
 ```
 
-Run a directory that contains a test (the first .html file will be used as the test)
+Run a directory that contains a test
 
 ```
-spassky run test_directory http://localhost:9191
+spassky run test_directory html_test.html http://localhost:9191
 ```
 
 Why?
