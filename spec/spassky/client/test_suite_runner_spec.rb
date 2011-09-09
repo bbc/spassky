@@ -41,7 +41,11 @@ module Spassky::Client
     it "reads a test" do
       @test_pusher.stub!(:push)
       @directory_reader.should_receive(:read_files).and_return(:file_body)
+<<<<<<< HEAD
       @test_suite_runner.run_test_suite("foo_test", "test name")
+=======
+      @test_runner.run_tests("foo_test", "test name")
+>>>>>>> run-test-by-name
     end
 
     it "pushes the test" do
