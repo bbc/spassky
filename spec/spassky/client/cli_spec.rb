@@ -8,7 +8,7 @@ module Spassky::Client
     end
 
     let :runner do
-      mock(:runner, :run_tests => true)
+      mock(:runner, :run_test_suite => true)
     end
 
     before do
@@ -26,7 +26,7 @@ module Spassky::Client
       end
 
       it "runs a test" do
-        runner.should_receive(:run_tests).with("test_pattern", "test_name")
+        runner.should_receive(:run_test_suite).with("test_pattern", "test_name")
         Cli.new.run "test_pattern", "test_name", "server_name"
       end
 

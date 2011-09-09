@@ -13,7 +13,7 @@ module Spassky
       device_statuses = stub(:device_statuses)
       test_result_summariser = stub(:test_result_summariser)
       test_result_summariser.stub!(:summary).and_return("the summary")
-      TestResultSummariser.stub!(:new).with(device_statuses).and_return(test_result_summariser)
+      TestSuiteResultSummariser.stub!(:new).with(device_statuses).and_return(test_result_summariser)
       TestSuiteResult.new(device_statuses).summary.should == "the summary"
     end
 

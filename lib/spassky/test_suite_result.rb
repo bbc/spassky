@@ -1,4 +1,4 @@
-require 'spassky/test_result_summariser'
+require 'spassky/test_suite_result_summariser'
 require 'spassky/device_test_status'
 require 'json'
 
@@ -26,7 +26,7 @@ module Spassky
     end
 
     def summary
-      TestResultSummariser.new(@device_statuses).summary
+      TestSuiteResultSummariser.new(@device_statuses).summary
     end
 
     def to_json

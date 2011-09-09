@@ -1,5 +1,5 @@
 module Spassky
-  class TestResultSummariser
+  class TestSuiteResultSummariser
     def initialize device_statuses
       @device_statuses = device_statuses
     end

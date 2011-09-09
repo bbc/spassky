@@ -19,7 +19,7 @@ module Spassky::Client
       writer = colour ? ColouredWriter : DefaultWriter
       pusher = Pusher.new(server)
       test_suite_runner = TestSuiteRunner.new(pusher, writer.new(STDOUT), DirectoryReader.new(pattern))
-      test_suite_runner.run_tests(pattern, test)
+      test_suite_runner.run_test_suite(pattern, test)
     end
 
     command "list devices"
