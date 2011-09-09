@@ -13,14 +13,14 @@ module Spassky::Client
 
     before do
       Pusher.stub!(:new).and_return(pusher)
-      TestRunner.stub!(:new).and_return(runner)
+      TestSuiteRunner.stub!(:new).and_return(runner)
     end
 
     describe "spassky run" do
       context "with a server url" do
         it "creates a pusher" do
           Pusher.should_receive(:new).with("server_name").and_return(pusher)
-          TestRunner.should_receive(:new).with(pusher, anything(), anything()).and_return(runner)
+          TestSuiteRunner.should_receive(:new).with(pusher, anything(), anything()).and_return(runner)
           Cli.new.run "test_pattern", "test_name", "server_name"
         end
       end
@@ -34,7 +34,7 @@ module Spassky::Client
         it "creates a test runner with a default writer" do
           default_writer = mock :default_writer
           DefaultWriter.should_receive(:new).with(STDOUT).and_return(default_writer)
-          TestRunner.should_receive(:new).with(anything(), default_writer, anything())
+          TestSuiteRunner.should_receive(:new).with(anything(), default_writer, anything())
           Cli.new.run "test_pattern", "test_name", "server_name"
         end
       end
@@ -43,7 +43,7 @@ module Spassky::Client
         it "creates a test runner with a colour writer" do
           coloured_writer = mock :coloured_writer
           ColouredWriter.should_receive(:new).with(STDOUT).and_return(coloured_writer)
-          TestRunner.should_receive(:new).with(anything(), coloured_writer, anything())
+          TestSuiteRunner.should_receive(:new).with(anything(), coloured_writer, anything())
           Cli.new.run "test_pattern", "test_name", "server_name", "--colour"
         end
       end

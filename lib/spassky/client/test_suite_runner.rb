@@ -1,14 +1,14 @@
 require 'spassky/client/writer'
 
 module Spassky::Client
-  class TestRunner
+  class TestSuiteRunner
     def initialize(pusher, writer, directory_reader)
       @pusher = pusher
       @writer = writer
       @directory_reader = directory_reader
     end
 
-    def run_tests(pattern, test_name)
+    def run_test_suite(pattern, test_name)
       begin
         @pusher.push(:name => test_name, :contents => @directory_reader.read_files.to_json) do |result|
           handle_test_result(result)

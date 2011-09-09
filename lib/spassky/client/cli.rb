@@ -2,7 +2,7 @@ require 'spassky'
 require 'spassky/version'
 require 'spassky/server/app'
 require 'spassky/client/device_list_retriever'
-require 'spassky/client/test_runner'
+require 'spassky/client/test_suite_runner'
 require 'spassky/client/pusher'
 require 'spassky/client/directory_reader'
 require 'commandable'
@@ -18,8 +18,8 @@ module Spassky::Client
     def run(pattern, test, server = DEFAULT_SERVER, colour = false)
       writer = colour ? ColouredWriter : DefaultWriter
       pusher = Pusher.new(server)
-      test_runner = TestRunner.new(pusher, writer.new(STDOUT), DirectoryReader.new(pattern))
-      test_runner.run_tests(pattern, test)
+      test_suite_runner = TestSuiteRunner.new(pusher, writer.new(STDOUT), DirectoryReader.new(pattern))
+      test_suite_runner.run_tests(pattern, test)
     end
 
     command "list devices"
