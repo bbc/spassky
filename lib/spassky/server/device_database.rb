@@ -28,9 +28,17 @@ module Spassky::Server
     end
 
     def device_identifier user_agent
-      device = @wurfl[user_agent]
-      return user_agent if device.nil?
-      "#{device.model_name} (id = #{device.id}, mobile_browser = #{device.mobile_browser}, device_os_version = #{device.device_os_version})"
+      @stored_device_identifiers ||= {}
+
+      unless @stored_device_identifiers[user_agent]
+        device = @wurfl[user_agent]
+        if device.nil?
+          @stored_device_identifiers[user_agent] = user_agent
+        else
+          @stored_device_identifiers[user_agent] = "#{device.model_name} (id = #{device.id}, mobile_browser = #{device.mobile_browser}, device_os_version = #{device.device_os_version})"
+        end
+      end
+      @stored_device_identifiers[user_agent]
     end
 
     def device user_agent

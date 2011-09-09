@@ -20,6 +20,7 @@ module Spassky::Server
         FileUtils.should_receive(:mkdir_p).with(Spassky::Server::WURFL_DIRECTORY)
         DeviceDatabase.new
       end
+
       it "loads up the wurfl database" do
         wurfl = mock(:wurfl).as_null_object
         WURFL.should_receive(:new).with(Spassky::Server::WURFL_FILE).and_return(wurfl)
@@ -43,6 +44,14 @@ module Spassky::Server
     describe ".device_identifier" do
       subject { DeviceDatabase.new }
 
+      it "only requests the device identifier once" do
+        wurfl = mock(:wurfl)
+        wurfl.should_receive(:[]).once
+        WURFL.should_receive(:new).and_return(wurfl)
+        subject.device_identifier("apples")
+        subject.device_identifier("apples")
+      end
+
       context "existing device" do
         it "returns the device identifier" do
           device = mock(:device)
@@ -57,7 +66,7 @@ module Spassky::Server
         end
       end
 
-      context "device deosn't exist in the database" do
+      context "device doesnt't exist in the database" do
         it "returns user-agent" do
           wurfl = mock(:wurfl)
           wurfl.should_receive(:[]).and_return(nil)
