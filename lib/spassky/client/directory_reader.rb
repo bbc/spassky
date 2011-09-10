@@ -15,12 +15,13 @@ module Spassky::Client
     private
 
     def read_directory
-      Dir.glob(@pattern + "/**/*").inject({}) do |hash, path|
+      files = {}
+      Dir.glob(@pattern + "/**/*").each do |path|
         if File.file? path
-          hash[remove_pattern_from_file(path)] = File.read(path)
+          files[remove_pattern_from_file(path)] = File.read(path)
         end
-        hash
       end
+      files
     end
 
     def remove_pattern_from_file path
