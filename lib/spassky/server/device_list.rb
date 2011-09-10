@@ -10,12 +10,18 @@ module Spassky::Server
 
     def recently_connected_devices
       @devices_and_time_last_connected.keys.select do |device_id|
-        Time.now.to_f - @devices_and_time_last_connected[device_id].to_f < 3
+        recent? @devices_and_time_last_connected[device_id]
       end
     end
 
     def clear
       @devices_and_time_last_connected = {}
+    end
+
+    private
+
+    def recent? time
+      Time.now.to_f - time.to_f < 3
     end
   end
 end
