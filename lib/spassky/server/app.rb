@@ -62,10 +62,10 @@ module Spassky::Server
     end
 
     get '/test_runs/:id/run/:random/assert' do
-      TestRun.find(params[:id]).save_result_for_device(
-        :device_identifier => get_device_identifier,
-        :status => params[:status],
-        :message => params[:message]
+      test_run.save_result_for_device(
+        :device_identifier  => get_device_identifier,
+        :status             => params[:status],
+        :message            => params[:message]
       )
     end
 
@@ -75,6 +75,10 @@ module Spassky::Server
     end
 
     private
+
+    def test_run
+      TestRun.find(params[:id])
+    end
 
     def get_test_file_contents test_run_id, file_name
       test_run = TestRun.find(params[:id])
