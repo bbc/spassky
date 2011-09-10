@@ -5,13 +5,14 @@ require 'json'
 module Spassky
   class TestSuiteResult
     attr_reader :device_statuses
+
     def initialize device_statuses
       @device_statuses = device_statuses
     end
 
     def status
       statuses = @device_statuses.map { |s| s.status }.uniq
-      return "in progress" if statuses.size == 0
+      return "in progress" if statuses.empty?
       status = ["in progress", "fail", "timed out"].find {|s| statuses.include? s}
       return status if status
       "pass"
