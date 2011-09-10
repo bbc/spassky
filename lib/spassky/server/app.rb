@@ -38,14 +38,6 @@ module Spassky::Server
       end
     end
 
-    def create_test_run
-      TestRun.create({
-        :name => params[:name],
-        :contents => JSON.parse(params[:contents]),
-        :devices => @device_list.recently_connected_devices
-      })
-    end
-
     post '/test_runs' do
       recently_connected_devices = @device_list.recently_connected_devices
       if recently_connected_devices.empty?
@@ -73,6 +65,18 @@ module Spassky::Server
 
     def test_run
       TestRun.find(params[:id])
+    end
+
+    def create_test_run
+      TestRun.create({
+        :name     => params[:name],
+        :contents => test_contents,
+        :devices  => @device_list.recently_connected_devices
+      })
+    end
+
+    def test_contents
+      JSON.parse(params[:contents])
     end
 
     def get_test_file_contents test_run_id, file_name
