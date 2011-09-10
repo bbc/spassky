@@ -10,12 +10,12 @@ module Spassky::Client
 
     def push(options)
       location = post_test(options)
-      result = nil
-      begin
+      loop do
         result = get_test_suite_result location
         yield result
-        @sleeper.sleep 0.4 if result.status == 'in progress'
-      end while result.status == 'in progress'
+        break if result.status != 'in progress'
+        @sleeper.sleep 0.4
+      end
     end
 
     private
