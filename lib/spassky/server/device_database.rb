@@ -15,6 +15,7 @@ module Spassky::Server
     def initialize
       download_wurfl_file unless File.exist?(WURFL_FILE)
       @wurfl = WURFL.new(WURFL_FILE)
+      @stored_device_identifiers = {}
     end
 
     def download_wurfl_file
@@ -28,17 +29,23 @@ module Spassky::Server
     end
 
     def device_identifier user_agent
-      @stored_device_identifiers ||= {}
+      cached_device_identifier(user_agent) or uncached_device_identifier(user_agent)
+    end
 
-      unless @stored_device_identifiers[user_agent]
-        device = @wurfl[user_agent]
-        if device.nil?
-          @stored_device_identifiers[user_agent] = user_agent
-        else
-          @stored_device_identifiers[user_agent] = "#{device.model_name} (id = #{device.id}, mobile_browser = #{device.mobile_browser}, device_os_version = #{device.device_os_version})"
-        end
-      end
+    private
+
+    def cached_device_identifier user_agent
       @stored_device_identifiers[user_agent]
+    end
+
+    def uncached_device_identifier user_agent
+      @stored_device_identifiers ||= {}
+      if device = @wurfl[user_agent]
+        @stored_device_identifiers[user_agent] = "#{device.model_name} (id = #{device.id}, mobile_browser = #{device.mobile_browser}, device_os_version = #{device.device_os_version})"
+      else
+        @stored_device_identifiers[user_agent] = user_agent
+      end
+      cached_device_identifier user_agent
     end
   end
 
