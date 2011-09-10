@@ -48,11 +48,10 @@ module Spassky::Server
 
     post '/test_runs' do
       recently_connected_devices = @device_list.recently_connected_devices
-      if recently_connected_devices.size > 0
-        redirect "/test_runs/#{create_test_run.id}"
-      else
+      if recently_connected_devices.empty?
         halt 500, "There are no connected devices"
       end
+      redirect "/test_runs/#{create_test_run.id}"
     end
 
     get '/test_runs/:id' do
