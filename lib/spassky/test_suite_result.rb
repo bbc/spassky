@@ -11,9 +11,9 @@ module Spassky
 
     def status
       statuses = @device_statuses.map { |s| s.status }.uniq
-      return "in progress" if statuses.include?("in progress") || statuses.size == 0
-      return "fail" if statuses.include?("fail")
-      return "timed out" if statuses.include?("timed out")
+      return "in progress" if statuses.size == 0
+      status = ["in progress", "fail", "timed out"].find {|s| statuses.include? s}
+      return status if status
       "pass"
     end
 
