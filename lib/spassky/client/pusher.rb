@@ -12,7 +12,7 @@ module Spassky::Client
       location = post_test(options)
       result = nil
       begin
-        result = Spassky::TestSuiteResult.from_json(RestClient.get(location))
+        result = get_test_suite_result location
         yield result
         @sleeper.sleep 0.4 if result.status == 'in progress'
       end while result.status == 'in progress'
@@ -20,11 +20,15 @@ module Spassky::Client
 
     private
 
+    def get_test_suite_result location
+      Spassky::TestSuiteResult.from_json(RestClient.get(location))
+    end
+
     def test_runs_url
       test_runs_url = @server_url.gsub(/\/$/, "") + "/test_runs"
     end
 
-    def post_test(options)
+    def post_test options
       RestClient.post(test_runs_url, options) do |response, request, result|
         get_redirect_location response
       end
