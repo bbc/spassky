@@ -6,12 +6,12 @@ module Spassky
 
     def summary
       statuses = []
-      passes = status_count "pass"
-      fails = status_count "fail"
-      timeouts = status_count "timed out"
-      statuses << "#{passes} passed" if passes > 0
-      statuses << "#{fails} failed" if fails > 0
-      statuses << "#{timeouts} timed out" if timeouts > 0
+      {"pass" => "passed", "fail" => "failed", "timed out" => "timed out"}.each do |status, description|
+        status_count = status_count status
+        if status_count > 0
+          statuses << "#{status_count} #{description}"
+        end
+      end
       statuses.join ", "
     end
 
