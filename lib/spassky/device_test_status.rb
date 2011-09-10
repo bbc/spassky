@@ -16,5 +16,14 @@ module Spassky
     def completed?
       @status != "in progress"
     end
+
+    def self.from_hash hash
+      DeviceTestStatus.new({
+        :device_id => hash["device_id"],
+        :test_name => hash["test_name"],
+        :status    => hash["status"],
+        :message   => hash["message"]}
+      )
+    end
   end
 end

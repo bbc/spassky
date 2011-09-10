@@ -45,12 +45,7 @@ module Spassky
 
     def self.from_json json
       device_test_statuses = JSON.parse(json)['device_statuses'].map do |device_test_status|
-        DeviceTestStatus.new({
-          :device_id => device_test_status["device_id"],
-          :test_name => device_test_status["test_name"],
-          :status    => device_test_status["status"],
-          :message   => device_test_status["message"]}
-        )
+        DeviceTestStatus.from_hash(device_test_status)
       end
       test_suite_result = TestSuiteResult.new(device_test_statuses)
     end
