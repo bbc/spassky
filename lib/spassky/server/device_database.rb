@@ -23,9 +23,7 @@ module Spassky::Server
       Kernel.puts("Downloading WURFL database")
       RestClient.proxy = ENV["http_proxy"] if ENV["http_proxy"]
       content = RestClient.get(LATEST)
-      File.open(WURFL_FILE, "w") do |file|
-        file.write(content)
-      end
+      save_wurfl_file content
     end
 
     def device_identifier user_agent
@@ -33,6 +31,12 @@ module Spassky::Server
     end
 
     private
+
+    def save_wurfl_file content
+      File.open(WURFL_FILE, "w") do |file|
+        file.write(content)
+      end
+    end
 
     def cached_device_identifier user_agent
       @stored_device_identifiers[user_agent]
