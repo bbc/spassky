@@ -61,11 +61,7 @@ module Spassky::Server
     end
 
     get '/test_runs/:id/run/:random/assert' do
-      test_run.save_result_for_device(
-        :device_identifier  => get_device_identifier,
-        :status             => params[:status],
-        :message            => params[:message]
-      )
+      save_test_result
     end
 
     get "/test_runs/:id/run/:random/*" do
@@ -81,6 +77,14 @@ module Spassky::Server
 
     def get_test_file_contents test_run_id, file_name
       HtmlTest.new(test_run.contents, idle_url, 1).get_file(file_name)
+    end
+
+    def save_test_result
+      test_run.save_result_for_device(
+        :device_identifier  => get_device_identifier,
+        :status             => params[:status],
+        :message            => params[:message]
+      )
     end
 
     def redirect_to_run_tests(test_run)
