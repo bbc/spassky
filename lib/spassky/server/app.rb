@@ -55,7 +55,7 @@ module Spassky::Server
     end
 
     get '/test_runs/:id' do
-      run = TestRun.find(params[:id])
+      run = test_run
       run.update_connected_devices(@device_list.recently_connected_devices)
       run.result.to_json
     end
@@ -80,7 +80,6 @@ module Spassky::Server
     end
 
     def get_test_file_contents test_run_id, file_name
-      test_run = TestRun.find(params[:id])
       HtmlTest.new(test_run.contents, idle_url, 1).get_file(file_name)
     end
 
