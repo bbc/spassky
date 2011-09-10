@@ -14,12 +14,16 @@ module Spassky::Client
           handle_test_suite_result(result)
         end
       rescue => error
-        @writer.write_failing(error.message)
-        Kernel.exit(1)
+        fail_with_error error
       end
     end
 
     private
+
+    def fail_with_error error
+      @writer.write_failing(error.message)
+      Kernel.exit(1)
+    end
 
     def handle_test_suite_result(test_suite_result)
       write_in_progress_status test_suite_result
