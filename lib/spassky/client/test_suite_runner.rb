@@ -19,6 +19,8 @@ module Spassky::Client
       end
     end
 
+    private
+
     def handle_test_suite_result(test_suite_result)
       write_in_progress_status test_suite_result
       unless test_suite_result.status == "in progress"
@@ -35,8 +37,12 @@ module Spassky::Client
     end
 
     def write_completed_test_status device_test_status
-      write(device_test_status.status, "#{device_test_status.status.upcase} #{device_test_status.test_name} on #{device_test_status.device_id}")
+      write(device_test_status.status, completion_status(device_test_status))
       write(device_test_status.status, device_test_status.message)
+    end
+
+    def completion_status device_test_status
+      "#{device_test_status.status.upcase} #{device_test_status.test_name} on #{device_test_status.device_id}"
     end
 
     def write status, message
