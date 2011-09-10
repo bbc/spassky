@@ -11,11 +11,9 @@ module Spassky
     end
 
     def status
-      statuses = @device_statuses.map { |s| s.status }.uniq
+      statuses = @device_statuses.map { |s| s.status }
       return "in progress" if statuses.empty?
-      status = ["in progress", "fail", "timed out"].find {|s| statuses.include? s}
-      return status if status
-      "pass"
+      ["in progress", "fail", "timed out", "pass"].find {|s| statuses.include? s}
     end
 
     def completed_since(older_test_suite_result)
