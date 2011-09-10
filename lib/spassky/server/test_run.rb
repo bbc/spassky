@@ -19,9 +19,7 @@ module Spassky::Server
     end
 
     def save_result_for_device(options)
-      unless ['pass', 'fail'].include? options[:status]
-        raise "#{options[:status]} is not a valid status"
-      end
+      validate_status options[:status]
       @status_by_device_id[options[:device_identifier]] = options[:status]
       @message_by_device_id[options[:device_identifier]] = options[:message]
     end
@@ -55,12 +53,20 @@ module Spassky::Server
       test_runs.find { |test_run| test_run.run_by_device_id?(device_id) == false }
     end
 
+    private
+
+    def self.test_runs
+      @test_runs ||= []
+    end
+
     def self.delete_all
       @test_runs = []
     end
 
-    def self.test_runs
-      @test_runs ||= []
+    def validate_status status
+      unless ['pass', 'fail'].include?(status)
+        raise "#{status} is not a valid status"
+      end
     end
   end
 end
