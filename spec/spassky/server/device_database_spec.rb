@@ -75,15 +75,5 @@ module Spassky::Server
         end
       end
     end
-
-    context "request device that exists" do
-      it "returns a device" do
-        wurfl = mock :wurfl
-        device = mock :device
-        wurfl.stub!(:[]).and_return(device)
-        WURFL.stub!(:new).and_return(wurfl)
-        DeviceDatabase.new.device("user agent").should == (device)
-      end
-    end
   end
 end

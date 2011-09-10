@@ -40,10 +40,6 @@ module Spassky::Server
       end
       @stored_device_identifiers[user_agent]
     end
-
-    def device user_agent
-      @wurfl[user_agent]
-    end
   end
 
   class SingletonDeviceDatabase < DeviceDatabase
