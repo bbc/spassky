@@ -9,16 +9,20 @@ module Spassky::Client
     end
 
     def push(options)
-      location = post_test(options)
-      loop do
-        result = get_test_suite_result location
+      each_test_suite_result(post_test(options)) do |result|
         yield result
-        break if result.status != 'in progress'
         @sleeper.sleep 0.4
       end
     end
 
     private
+
+    def each_test_suite_result location
+      while (result = get_test_suite_result(location)).status == 'in progress'
+        yield result
+      end
+      yield get_test_suite_result(location)
+    end
 
     def get_test_suite_result location
       Spassky::TestSuiteResult.from_json(RestClient.get(location))

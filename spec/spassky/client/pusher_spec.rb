@@ -78,7 +78,7 @@ module Spassky::Client
 
     it "sleeps while looping during get requests" do
       RestClient.stub!(:get).and_return(in_progress_status, in_progress_status, in_progress_status, passed_status)
-      @sleeper.should_receive(:sleep).with(0.4).exactly(3).times
+      @sleeper.should_receive(:sleep).with(0.4).exactly(4).times
       @pusher.push("test contents") { |result| }
     end
   end
