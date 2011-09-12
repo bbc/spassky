@@ -3,6 +3,8 @@ Spassky
 Spassky is a test framework that allows us to automate the process of running JavaScript Unit tests on various browsers and devices.
 It currently supports running tests in QUnit, but in theory, will support any JavaScript framework that the browser supports.
 
+Spassky was a protagonist in the greatest Chess match of last century - which being played by an American and a Soviet Russian, was a Cold War metaphor. Spassky eventually resigned and Fischer won the championship.
+
 Architecture
 ------------
 ```
