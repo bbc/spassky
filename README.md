@@ -33,7 +33,7 @@ Architecture
 
 Developers push JS unit tests to the Spassky server through a command line interface.
 Multiple devices connected to the central Spassky server will poll the server for a suite of tests.
-The browser will be redirected to the test page, run the tests, and then be redirected back to the idle loop.
+The browser will be redirected to the test page, run the tests, and then are redirected to the idle loop.
 
 
 
@@ -43,7 +43,6 @@ Installation
 
 ```
 gem install spassky
-
 ```
 
 
@@ -60,7 +59,7 @@ Start the server:
 spassky server 9191
 ```
 
-Connect some devices by browsing to http://localhost:9191/device/connect on the device. The device will stay in an idle meta refresh loop until it receives a test to run.
+Connect test devices by browsing to http://localhost:9191/device/connect on the device. The device will stay in an idle meta refresh loop until it receives a test to run.
 
 Check what devices are connected to the server:
 
@@ -92,7 +91,7 @@ We need to run automated tests on a wide range of web-enabled devices with very 
 
 How it works
 ------------
-Physical devices act as test agents, connected permanently to a central server using meta refresh tags. Using a command-line utility, developers execute tests against those browsers by posting to the central server. The tests themselves are plain HTML pages, that are expected to call an assert URL (e.g. by embedding an image) within a time frame. That means even devices without any JavaScript can run automated tests of some kind.
+Physical devices act as test agents, connected permanently to a central server using meta refresh tags. Using a command-line utility, developers execute tests against those browsers by posting to the central server. The tests themselves are plain HTML pages, that are expected to call an assert URL (e.g. by embedding an image) within a time frame.
 
 Test structure
 --------------
