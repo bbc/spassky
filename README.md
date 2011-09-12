@@ -1,15 +1,30 @@
 Spassky
 =======
-A distributed web testing tool. We use it at the BBC for testing our web apps on a wide range of devices.
+Spassky is a test framework that allows us to automate the process of running JavaScript Unit tests on various browsers and devices.
+It currently supports running tests in QUnit, but in theory, will support any JavaScript framework that the browser supports.
 
-![Spassky](https://github.com/BBC/spassky/raw/master/spassky.jpg)
+Architecture
+------------
+
+Developers push JS unit tests to the Spassky server through a command line interface.
+Multiple devices connected to the central Spassky server will poll the server for a suite of tests.
+The browser will be redirected to the test page, run the tests, and then be redirected back to the idle loop.
+
+
+
 
 Installation
 ------------
 
 ```
 gem install spassky
+
 ```
+
+
+
+![Spassky](https://github.com/BBC/spassky/raw/master/spassky.jpg)
+
 
 Usage
 -----
