@@ -31,6 +31,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'aruba'
   s.add_development_dependency 'fakefs'
-  s.add_development_dependency 'ruby-debug19'
   s.add_development_dependency 'factory_girl'
 end
