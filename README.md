@@ -5,6 +5,27 @@ It currently supports running tests in QUnit, but in theory, will support any Ja
 
 Architecture
 ------------
+                   +-----+
+                   | You |
+                   +--+--+
+                      |
+                      |
+                      v
+ +------------------------------------------+
+ |         Spassky Central Server           |
+ +------------------------------------------+
+           |           |          |
+           |           |          |
+           v           v          v
+       +-------+   +-------+   +-----+
+       |iPhone3|   |iPhone4|   |Nokia|
+       |-------|   |-------|   |-----|
+       |       |   |       |   | +++ |
+       |       |   |       |   | +++ |
+       |   +   |   |   +   |   | +++ |
+       +-------+   +-------+   +-----+
+
+
 
 Developers push JS unit tests to the Spassky server through a command line interface.
 Multiple devices connected to the central Spassky server will poll the server for a suite of tests.
