@@ -5,6 +5,7 @@ It currently supports running tests in QUnit, but in theory, will support any Ja
 
 Architecture
 ------------
+```
                    +-----+
                    | You |
                    +--+--+
@@ -24,6 +25,7 @@ Architecture
        |       |   |       |   | +++ |
        |   +   |   |   +   |   | +++ |
        +-------+   +-------+   +-----+
+```
 
 
 
