@@ -1,7 +1,6 @@
 require 'capybara'
 require 'capybara/dsl'
 require 'capybara/cucumber'
-
 require 'aruba/cucumber'
 
 $:.unshift(File.join(File.dirname(__FILE__), '../../lib'))

@@ -29,14 +29,9 @@ Architecture
        +-------+   +-------+   +-----+
 ```
 
-
-
 Developers push JS unit tests to the Spassky server through a command line interface.
 Multiple devices connected to the central Spassky server will poll the server for a suite of tests.
 The browser will be redirected to the test page, run the tests, and then are redirected to the idle loop.
-
-
-
 
 Installation
 ------------
@@ -44,8 +39,6 @@ Installation
 ```
 gem install spassky
 ```
-
-
 
 ![Spassky](https://github.com/BBC/spassky/raw/master/spassky.jpg)
 
@@ -56,7 +49,7 @@ Usage
 Start the server:
 
 ```
-spassky server 9191
+spassky server --port 9191
 ```
 
 Connect test devices by browsing to http://localhost:9191/device/connect on the device. The device will stay in an idle meta refresh loop until it receives a test to run.
@@ -64,25 +57,25 @@ Connect test devices by browsing to http://localhost:9191/device/connect on the 
 Check what devices are connected to the server:
 
 ```
-spassky devices http://localhost:9191
+spassky devices --server http://localhost:9191
 ```
 
 Run a single html file (the second parameter is the test name):
 
 ```
-spassky run html_test.html html_test.html http://localhost:9191
+spassky run --pattern html_test.html --test html_test.html --server http://localhost:9191
 ```
 
 Run a test with colour:
 
 ```
-spassky run html_test.html html_test.html http://localhost:9191 --colour
+spassky run --pattern html_test.html --test html_test.html --server http://localhost:9191 --colour
 ```
 
 Run a directory that contains a test
 
 ```
-spassky run test_directory html_test.html http://localhost:9191
+spassky run --pattern test_directory --test html_test.html --server http://localhost:9191
 ```
 
 Why?

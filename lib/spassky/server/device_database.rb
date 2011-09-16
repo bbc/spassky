@@ -45,7 +45,7 @@ module Spassky::Server
     def uncached_device_identifier user_agent
       @stored_device_identifiers ||= {}
       if device = @wurfl[user_agent]
-        @stored_device_identifiers[user_agent] = "#{device.model_name} (id = #{device.id}, mobile_browser = #{device.mobile_browser}, device_os_version = #{device.device_os_version})"
+        @stored_device_identifiers[user_agent] = "#{device.model_name} (id = #{device[:id]}, mobile_browser = #{device.mobile_browser}, device_os_version = #{device.device_os_version})"
       else
         @stored_device_identifiers[user_agent] = user_agent
       end
