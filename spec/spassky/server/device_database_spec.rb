@@ -16,11 +16,6 @@ module Spassky::Server
     end
 
     context ".new" do
-      it "creates the wurfl directory" do
-        FileUtils.should_receive(:mkdir_p).with(Spassky::Server::WURFL_DIRECTORY)
-        DeviceDatabase.new
-      end
-
       it "loads up the wurfl database" do
         wurfl = mock(:wurfl).as_null_object
         WURFL.should_receive(:new).with(Spassky::Server::WURFL_FILE).and_return(wurfl)
