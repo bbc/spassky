@@ -4,5 +4,5 @@ Feature: Server
   I want to be able to type 'spassky server 9393' to launch a server
 
   Scenario: Launch Server
-    Given I run the command "spassky server 9393"
+    Given I run the command "spassky server --port 9393"
     Then it should not crash

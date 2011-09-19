@@ -61,8 +61,8 @@ When /^the device disconnects$/ do
   end
 end
 
-Given /^I run the command "spassky server 9393"$/ do
-  @spassky_server_process = ChildProcess.build('./bin/spassky server 9393')
+Given /^I run the command "spassky server --port 9393"$/ do
+  @spassky_server_process = ChildProcess.build('./bin/spassky server --port 9393')
   @spassky_server_process.start
 end
 

@@ -4,5 +4,25 @@ $:.unshift(File.dirname(__FILE__) + '/../lib') unless $:.include?(File.dirname(_
 require 'rubygems'
 require 'spassky'
 require 'spassky/client/cli'
+require 'trollop'
 
-Commandable.execute(ARGV)
+command = ARGV.shift.downcase.to_sym
+if command == :run
+  options = Trollop::options do
+    opt :pattern, "Test file name or test directory", :type => String
+    opt :test,    "Test file name",                   :type => String
+    opt :server,  "Spassky server",                   :type => String,  :default => Spassky::Client::Cli::DEFAULT_SERVER
+    opt :colour,  "Output tests results in colour",   :default => false
+  end
+  Spassky::Client::Cli.new.run(options[:pattern], options[:test], options[:server], options[:colour])
+elsif command == :devices
+  options = Trollop::options do
+    opt :server, "Spassky server", :type => String, :default => Spassky::Client::Cli::DEFAULT_SERVER
+  end
+  Spassky::Client::Cli.new.devices(options[:server])
+elsif command == :server
+  options = Trollop::options do
+    opt :port, "The port to run the server on", :type => String, :default => Spassky::Client::Cli::DEFAULT_PORT
+  end
+  Spassky::Client::Cli.new.server(options[:port])
+end

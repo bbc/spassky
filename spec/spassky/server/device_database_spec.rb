@@ -51,7 +51,7 @@ module Spassky::Server
         it "returns the device identifier" do
           device = mock(:device)
           device.stub!(:model_name).and_return "MODEL"
-          device.stub!(:id).and_return "ID"
+          device.stub!(:[]).with(:id).and_return("ID")
           device.stub!(:mobile_browser).and_return "BROWSER"
           device.stub!(:device_os_version).and_return "OS_VERSION"
           wurfl = mock(:wurfl)

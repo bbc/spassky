@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sinatra'
   s.add_dependency 'rainbow'
   s.add_dependency 'wurfl-lite'
-  s.add_dependency 'commandable'
+  s.add_dependency 'trollop'
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'

@@ -32,7 +32,7 @@ Feature: Run QUnit Tests
       </html>
       """
     And a connected mobile device "blackberry"
-    When I run "spassky run qunit_passing/qunit_test test_suite.html <host>" with the server host
+    When I run "spassky run --pattern qunit_passing/qunit_test --test test_suite.html --server <host>" with the server host
     Then the output should contain:
       """
       PASS test_suite.html on blackberry
@@ -67,7 +67,7 @@ Feature: Run QUnit Tests
       </html>
       """
     And a connected mobile device "blackberry"
-    When I run "spassky run qunit_failing/qunit_test test_suite.html <host>" with the server host
+    When I run "spassky run --pattern qunit_failing/qunit_test --test test_suite.html --server <host>" with the server host
     Then the output should contain:
       """
       FAIL test_suite.html on blackberry
@@ -102,7 +102,7 @@ Feature: Run QUnit Tests
       </html>
       """
     And a connected mobile device "blackberry"
-    When I run "spassky run qunit_passing/qunit_test test_suite.html <host>" with the server host
+    When I run "spassky run --pattern qunit_passing/qunit_test --test test_suite.html --server <host>" with the server host
     Then the output should contain:
       """
       PASS test_suite.html on blackberry

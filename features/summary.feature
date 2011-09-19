@@ -29,5 +29,5 @@ Feature: Summary
 
   Scenario: One test passing on all devices
     Given I have two connected devices
-    When I run "spassky run passing.html passing.html <host>" with the server host
+    When I run "spassky run --pattern passing.html --test passing.html --server <host>" with the server host
     Then the output should contain "2 passed"
