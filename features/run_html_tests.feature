@@ -13,7 +13,7 @@ Feature: Run HTML Tests
           <body>
           <h1>A PASSING test!</h1>
           <script type="text/javascript">
-          assert(true, 'this test should pass');
+          new Spassky().assert(true, 'this test should pass');
           </script>
           </body>
         </html>
@@ -26,7 +26,7 @@ Feature: Run HTML Tests
           <body>
           <h1>A FAILING test!</h1>
           <script type="text/javascript">
-          assert(false, 'this test should fail');
+          new Spassky().assert(false, 'this test should fail');
           </script>
           </body>
         </html>

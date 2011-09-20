@@ -1,8 +1,9 @@
 QUnit.done = function(result) {
+  var spassky = new Spassky();
   if (result.failed > 0) {
-    assert(false, "qunit failed");
+    spassky.assert(false, "qunit failed");
   } else {
-    assert(true, "qunit passed");
+    spassky.assert(true, "qunit passed");
   }
 };
 

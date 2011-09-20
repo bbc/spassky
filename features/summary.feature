@@ -10,7 +10,7 @@ Feature: Summary
           <head></head>
           <body>
           <script type="text/javascript">
-          assert(true, 'this test should pass');
+          new Spassky().assert(true, 'this test should pass');
           </script>
           </body>
         </html>
@@ -21,7 +21,7 @@ Feature: Summary
           <head></head>
           <body>
           <script type="text/javascript">
-          assert(false, 'this test should fail');
+          new Spassky().assert(false, 'this test should fail');
           </script>
           </body>
         </html>

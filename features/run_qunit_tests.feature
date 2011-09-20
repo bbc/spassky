@@ -8,10 +8,11 @@ Feature: Run QUnit Tests
     Given a file named "qunit_passing/qunit_test/passing.js" with:
       """
       QUnit.done = function(result) {
+        var spassky = new Spassky();
         if (result.failed > 0) {
-          assert(false, "qunit failed");
+          spassky.assert(false, "qunit failed");
         } else {
-          assert(true, "qunit passed");
+          spassky.assert(true, "qunit passed");
         }
       };
 
@@ -43,10 +44,11 @@ Feature: Run QUnit Tests
     Given a file named "qunit_failing/qunit_test/failing.js" with:
       """
       QUnit.done = function(result) {
+        var spassky = new Spassky();
         if (result.failed > 0) {
-          assert(false, "qunit failed");
+          spassky.assert(false, "qunit failed");
         } else {
-          assert(true, "qunit passed");
+          spassky.assert(true, "qunit passed");
         }
       };
 
@@ -78,10 +80,11 @@ Feature: Run QUnit Tests
     Given a file named "qunit_passing/qunit_test/another_directory/passing.js" with:
       """
       QUnit.done = function(result) {
+        var spassky = new Spassky();
         if (result.failed > 0) {
-          assert(false, "qunit failed");
+          spassky.assert(false, "qunit failed");
         } else {
-          assert(true, "qunit passed");
+          spassky.assert(true, "qunit passed");
         }
       };
 
@@ -112,7 +115,7 @@ Feature: Run QUnit Tests
   Scenario: Test with a file in a relative path
     Given a file named "test/js/passing.js" with:
       """
-      assert(true, "qunit passed");
+      new Spassky().assert(true, "qunit passed");
       """
     And a file named "test/html/suite.html" with:
       """
