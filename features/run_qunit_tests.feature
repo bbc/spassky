@@ -127,6 +127,6 @@ Feature: Run QUnit Tests
     When I run "spassky run --pattern test --test html/suite.html --server <host>" with the server host
     Then the output should contain:
       """
-      PASS suite.html on blackberry
+      PASS html/suite.html on blackberry
       """
     And the exit status should be 0

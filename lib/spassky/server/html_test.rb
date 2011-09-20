@@ -1,8 +1,9 @@
 module Spassky::Server
   class HtmlTest
-    def initialize(contents, url, seconds)
+    def initialize(contents, next_url_to_redirect_to, assert_post_back_url, seconds)
       @contents = contents
-      @url = url
+      @next_url_to_redirect_to = next_url_to_redirect_to
+      @assert_post_back_url = assert_post_back_url
       @seconds = seconds
     end
 
@@ -19,11 +20,12 @@ module Spassky::Server
 
     def assert_js_script
       assert_js = File.read(File.join(File.dirname(__FILE__), 'assert.js'))
+      assert_js.gsub!("{ASSERT_POST_BACK_URL}", @assert_post_back_url)
       "<script type=\"text/javascript\">#{assert_js}</script>"
     end
 
     def meta_refresh_tag
-      "<meta http-equiv=\"refresh\" content=\"#{@seconds}; url='#{@url}'\">"
+      "<meta http-equiv=\"refresh\" content=\"#{@seconds}; url='#{@next_url_to_redirect_to}'\">"
     end
   end
 end

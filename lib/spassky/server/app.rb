@@ -57,8 +57,7 @@ module Spassky::Server
     end
 
     get "/test_runs/:id/run/:random/*" do
-      file_name = params[:splat].join("/")
-      get_test_file_contents params[:id], file_name
+      get_test_file_contents
     end
 
     private
@@ -79,8 +78,10 @@ module Spassky::Server
       JSON.parse(params[:contents])
     end
 
-    def get_test_file_contents test_run_id, file_name
-      HtmlTest.new(test_run.contents, idle_url, 1).get_file(file_name)
+    def get_test_file_contents
+      file_name = params[:splat].join("/")
+      assert_post_back_url = "/test_runs/#{params[:id]}/run/#{params[:random]}/assert"
+      HtmlTest.new(test_run.contents, idle_url, assert_post_back_url, 1).get_file(file_name)
     end
 
     def save_test_result
