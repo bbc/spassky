@@ -2,7 +2,7 @@ require 'sinatra/base'
 require 'spassky/server/random_string_generator'
 require 'spassky/server/test_run'
 require 'spassky/server/device_list'
-require 'spassky/server/html_test'
+require 'spassky/server/test_suite_container'
 require 'spassky/server/device_database'
 
 module Spassky::Server
@@ -81,7 +81,7 @@ module Spassky::Server
     def get_test_file_contents
       file_name = params[:splat].join("/")
       assert_post_back_url = "/test_runs/#{params[:id]}/run/#{params[:random]}/assert"
-      HtmlTest.new(test_run.contents, idle_url, assert_post_back_url, 1).get_file(file_name)
+      TestSuiteContainer.new(test_run.contents, idle_url, assert_post_back_url, 1).get_file(file_name)
     end
 
     def save_test_result

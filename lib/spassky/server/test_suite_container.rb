@@ -1,5 +1,5 @@
 module Spassky::Server
-  class HtmlTest
+  class TestSuiteContainer
     def initialize(contents, next_url_to_redirect_to, assert_post_back_url, seconds)
       @contents = contents
       @next_url_to_redirect_to = next_url_to_redirect_to
