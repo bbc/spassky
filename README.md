@@ -90,7 +90,7 @@ Test structure
 --------------
 Tests can be either a single html file, or a directory containing multiple files.
 
-If spassky is given a directory, it will pass all files in that directory to that server. The first html file will be used as the test entry point. Any other files in the test directory can be linked to from the html file relatively.
+If spassky is given a directory, it will pass all files in that directory to that server. Any other files in the test directory can be linked to from the html file relatively.
 
 ### An example test directory:
 ```
