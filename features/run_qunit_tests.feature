@@ -108,3 +108,25 @@ Feature: Run QUnit Tests
       PASS test_suite.html on blackberry
       """
     And the exit status should be 0
+
+  Scenario: Test with a file in a relative path
+    Given a file named "test/js/passing.js" with:
+      """
+      assert(true, "qunit passed");
+      """
+    And a file named "test/html/suite.html" with:
+      """
+      <html>
+        <head></head>
+        <body>
+          <script type="text/javascript" src="../js/passing.js"></script>
+        </body>
+      </html>
+      """
+    And a connected mobile device "blackberry"
+    When I run "spassky run --pattern test --test html/suite.html --server <host>" with the server host
+    Then the output should contain:
+      """
+      PASS html/suite.html on blackberry
+      """
+    And the exit status should be 0

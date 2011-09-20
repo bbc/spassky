@@ -93,52 +93,14 @@ module Spassky::Server
     end
 
     describe "GET /test_runs/:id/run/:random/path/to/file" do
-      before do
-        @test_contents = {
-          "test_file.js"        => "some javascript",
-          "fake_test.html.file" => "don't choose this one",
-          "test_name.html"      => "actual test!",
-          "directory/another_directory/filename.txt" => "file 1 contents"
-        }
-      end
-
-      context "file name is a file" do
-        it "returns the specified file" do
-          test = mock(:test, :name => "fake_test.html.file", :contents => @test_contents)
-          TestRun.stub!(:find).with('123').and_return(test)
-          get "/test_runs/123/run/random/fake_test.html.file"
-          last_response.body.should include("don't choose this one")
-        end
-      end
-
-      context "with a file that is in a subdirectory" do
-        it "returns the file" do
-          test = mock(:test, :name => "test_name", :contents => @test_contents)
-          TestRun.stub!(:find).and_return(test)
-          get "/test_runs/123/run/random/directory/another_directory/filename.txt"
-          last_response.body.should include "file 1 contents"
-        end
-      end
-
-      describe "when the test contents includes a </head> tag" do
-        before do
-          @test_contents["test_name.html"] = "</head>"
-          @test = mock(:test, :name => "test_name", :contents => @test_contents)
-          TestRun.stub!(:find).with('123').and_return(@test)
-        end
-
-        it "adds a meta-refresh tag to the test contents" do
-          RandomStringGenerator.stub!(:random_string).and_return("next-iteration")
-          get "/test_runs/123/run/random/test_name.html"
-          url = "/device/idle/next-iteration"
-          last_response.body.should include("<meta http-equiv=\"refresh\" content=\"1; url='#{url}'\"></head>")
-        end
-
-        it "adds the assert.js script to the head" do
-          File.stub!(:read).and_return("assert.js!")
-          get "/test_runs/123/run/random/test_name.html"
-          last_response.body.should include("<script type=\"text/javascript\">assert.js!</script>")
-        end
+      it "gets the contents of the file" do
+        test = mock(:test, :name => "fake_test.html.file", :contents => {})
+        TestRun.stub!(:find).with('123').and_return(test)
+        html_test = mock(:html_test)
+        html_test.stub!(:get_file).and_return("contents")
+        HtmlTest.should_receive(:new).with({}, "/device/idle/random-string", "/test_runs/123/run/random/assert", 1).and_return html_test
+        get "/test_runs/123/run/random/fake_test.html.file"
+        last_response.body.should == "contents"
       end
     end
 
