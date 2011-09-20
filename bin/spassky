@@ -6,8 +6,9 @@ require 'spassky'
 require 'spassky/client/cli'
 require 'trollop'
 
-command = ARGV.shift.downcase.to_sym
-if command == :run
+command = ARGV.shift
+
+if command == "run"
   options = Trollop::options do
     opt :pattern, "Test file name or test directory", :type => String
     opt :test,    "Test file name",                   :type => String
@@ -15,14 +16,22 @@ if command == :run
     opt :colour,  "Output tests results in colour",   :default => false
   end
   Spassky::Client::Cli.new.run(options[:pattern], options[:test], options[:server], options[:colour])
-elsif command == :devices
+elsif command == "devices"
   options = Trollop::options do
     opt :server, "Spassky server", :type => String, :default => Spassky::Client::Cli::DEFAULT_SERVER
   end
   Spassky::Client::Cli.new.devices(options[:server])
-elsif command == :server
+elsif command == "server"
   options = Trollop::options do
     opt :port, "The port to run the server on", :type => String, :default => Spassky::Client::Cli::DEFAULT_PORT
   end
   Spassky::Client::Cli.new.server(options[:port])
+else
+  puts <<-USAGE
+  Spassky (version #{Spassky::VERSION})
+  Usage:
+  spassky run --pattern <pattern> --test <test> [--server <server>] [--colour]
+  spassky devices [--server <server>]
+  spassky server [--port <port>]
+  USAGE
 end
