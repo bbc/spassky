@@ -98,7 +98,7 @@ module Spassky::Server
         TestRun.stub!(:find).with('123').and_return(test)
         html_test = mock(:html_test)
         html_test.stub!(:get_file).and_return("contents")
-        TestSuiteContainer.should_receive(:new).with({}, "/device/idle/random-string", "/test_runs/123/run/random/assert", 1).and_return html_test
+        TestSuiteContainer.should_receive(:new).with({}, "/device/idle/random-string", "/test_runs/123/run/random/assert", 10).and_return html_test
         get "/test_runs/123/run/random/fake_test.html.file"
         last_response.body.should == "contents"
       end
