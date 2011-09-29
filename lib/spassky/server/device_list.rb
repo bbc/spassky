@@ -21,7 +21,7 @@ module Spassky::Server
     private
 
     def recent? time
-      Time.now.to_f - time.to_f < 3
+      Time.now.to_f - time.to_f < 60
     end
   end
 end

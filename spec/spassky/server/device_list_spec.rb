@@ -22,11 +22,11 @@ module Spassky::Server
       subject.recently_connected_devices.size.should == 0
     end
 
-    it "ignores devices connected more than 3 seconds ago" do
+    it "ignores devices connected more than 60 seconds ago" do
       now = Time.now
-      Time.stub!(:now).and_return(now - 3)
+      Time.stub!(:now).and_return(now - 60)
       subject.update_last_connected("a")
-      Time.stub!(:now).and_return(now - 2)
+      Time.stub!(:now).and_return(now - 59)
       subject.update_last_connected("b")
       Time.stub!(:now).and_return(now)
       subject.recently_connected_devices.should == ["b"]
