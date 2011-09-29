@@ -81,7 +81,7 @@ module Spassky::Server
     def get_test_file_contents
       file_name = params[:splat].join("/")
       assert_post_back_url = "/test_runs/#{params[:id]}/run/#{params[:random]}/assert"
-      TestSuiteContainer.new(test_run.contents, idle_url, assert_post_back_url, 10).get_file(file_name)
+      TestSuiteContainer.new(test_run.contents, idle_url, assert_post_back_url, 30).get_file(file_name)
     end
 
     def save_test_result
