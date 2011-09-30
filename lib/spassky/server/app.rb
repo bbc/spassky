@@ -29,6 +29,7 @@ module Spassky::Server
     end
 
     get '/device/idle/:random' do
+      Kernel.puts("Connected device: #{request.user_agent}")
       test_run = TestRun.find_next_test_to_run_by_device_id(get_device_identifier)
       @device_list.update_last_connected(get_device_identifier)
       if test_run

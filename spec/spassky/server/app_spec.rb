@@ -54,6 +54,11 @@ module Spassky::Server
         get "/device/idle/123"
       end
 
+      it "writes out the device user agent" do
+        Kernel.should_receive(:puts).with("Connected device: some user agent")
+        get "/device/idle/123"
+      end
+
       context "when there are no tests to run on the connected device" do
         it "serves HTML page with a meta-refresh tag" do
           TestRun.stub!(:find_next_test_to_run_by_device_id).and_return(nil)
