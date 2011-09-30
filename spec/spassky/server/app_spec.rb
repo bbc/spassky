@@ -47,6 +47,7 @@ module Spassky::Server
         @device_database = mock :device_database
         SingletonDeviceDatabase.stub!(:instance).and_return(@device_database)
         @device_database.stub!(:device_identifier).and_return("anything")
+        $stdout.stub!(:puts)
       end
 
       it "tells the device list that the device connected using the device identifier" do
@@ -55,9 +56,11 @@ module Spassky::Server
       end
 
       it "writes out the device user agent" do
-        Kernel.should_receive(:puts).with("Connected device: some user agent")
+        $stdout.should_receive(:puts).with("Connected device: some user agent")
+        $stdout.should_receive(:flush)
         get "/device/idle/123"
       end
+
 
       context "when there are no tests to run on the connected device" do
         it "serves HTML page with a meta-refresh tag" do
