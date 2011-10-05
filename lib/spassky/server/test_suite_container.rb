@@ -1,10 +1,9 @@
 module Spassky::Server
   class TestSuiteContainer
-    def initialize(contents, next_url_to_redirect_to, assert_post_back_url, seconds)
+    def initialize(contents, next_url_to_redirect_to, assert_post_back_url)
       @contents = contents
       @next_url_to_redirect_to = next_url_to_redirect_to
       @assert_post_back_url = assert_post_back_url
-      @seconds = seconds
     end
 
     def get_file(name)
