@@ -15,17 +15,14 @@ module Spassky::Server
     private
 
     def add_helpers_to_html html
-      html.gsub('</head>', assert_js_script + meta_refresh_tag + '</head>')
+      html.gsub('</head>', assert_js_script + '</head>')
     end
 
     def assert_js_script
       assert_js = File.read(File.join(File.dirname(__FILE__), 'assert.js'))
       assert_js.gsub!("{ASSERT_POST_BACK_URL}", @assert_post_back_url)
+      assert_js.gsub!("{IDLE_URL}", @next_url_to_redirect_to)
       "<script type=\"text/javascript\">#{assert_js}</script>"
-    end
-
-    def meta_refresh_tag
-      "<meta http-equiv=\"refresh\" content=\"#{@seconds}; url='#{@next_url_to_redirect_to}'\">"
     end
   end
 end
