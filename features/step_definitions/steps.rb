@@ -34,6 +34,10 @@ end
 Given /^a Wireless Universal Resource FiLe$/ do
 end
 
+Given /^I have a timeout of (\d+) seconds?$/ do |timeout|
+  ENV["SPASSKY_TIMEOUT"] = timeout
+end
+
 When /^I run "([^"]*)" with the server host$/ do |command_line|
   run_simple(unescape(command_line.gsub('<host>', "http://#{@uri.host}:#{@uri.port}")), false)
 end

@@ -20,6 +20,7 @@ Feature: Device Timeout
 
   Scenario: One device times out
     Given a connected mobile device "ipad"
+    And I have a timeout of 5 seconds
     When the device disconnects
     And I run "spassky run --pattern timed-out.html --test timed-out.html --server <host>" with the server host
     Then the output should contain:

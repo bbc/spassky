@@ -21,7 +21,9 @@ module Spassky::Server
     private
 
     def recent? time
-      Time.now.to_f - time.to_f < 60
+      timeout = 60
+      timeout = Integer(ENV["SPASSKY_TIMEOUT"]) if ENV["SPASSKY_TIMEOUT"]
+      Time.now.to_f - time.to_f < timeout
     end
   end
 end
